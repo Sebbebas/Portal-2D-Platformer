@@ -4,8 +4,7 @@ public class PlayerLook : MonoBehaviour
 {
     // Configurable Parameters
     [SerializeField] Camera cam;
-    [SerializeField] float camSpeed = 5f;
-    [SerializeField] float rangeMultiplier = 3f;
+    [SerializeField] float camRange = 5f;
     [SerializeField] float radius = 5f;
 
     // Cached References
@@ -27,7 +26,7 @@ public class PlayerLook : MonoBehaviour
         Vector2 directionToMouse = mousePosition - (Vector2)transform.position;
 
         // Move the camera towards the mouse
-        Vector2 newPosition = (Vector2)transform.position + directionToMouse * camSpeed * Time.deltaTime * rangeMultiplier;
+        Vector2 newPosition = (Vector2)transform.position + directionToMouse * camRange * Time.deltaTime;
 
         // Clamp the camera position within the radius
         Vector2 directionToNewPosition = newPosition - (Vector2)transform.position;
@@ -43,7 +42,9 @@ public class PlayerLook : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawRay(transform.position, (cam.ScreenToWorldPoint(Input.mousePosition) - transform.position).normalized);
+        Vector3 cameraDirection = transform.position - cam.transform.position;
+        Gizmos.DrawRay(cam.transform.position, cameraDirection);
+
         Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(transform.position, radius);
     }
