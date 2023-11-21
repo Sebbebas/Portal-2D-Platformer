@@ -79,7 +79,6 @@ public class Playermovement : MonoBehaviour
     }
     #endregion
 
-
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
