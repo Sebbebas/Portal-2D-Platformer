@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6782352304543584653}
   - component: {fileID: 5689521546028523046}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Player Visualls
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97,11 +97,10 @@ GameObject:
   - component: {fileID: 7534293771589156938}
   - component: {fileID: 1900129800963196871}
   - component: {fileID: 330882780497070122}
-  - component: {fileID: 6194501254844925572}
   - component: {fileID: 595947114523750264}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -243,23 +242,6 @@ MonoBehaviour:
     m_Bits: 64
   groundCheckOffset: {x: 0, y: 0.88}
   groundCheckRadius: 0.5
---- !u!114 &6194501254844925572
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4852439808313440534}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f699d9712ac80be4f806c0b2183bbe68, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mainCamera: {fileID: 0}
-  cameraSpeed: 5
-  radius: 5
-  cameraReturnSpeed: 5
-  cameraToMouse: 1
 --- !u!114 &595947114523750264
 MonoBehaviour:
   m_ObjectHideFlags: 0
