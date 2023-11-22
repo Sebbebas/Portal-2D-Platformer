@@ -79,6 +79,20 @@ public class Playermovement : MonoBehaviour
     }
     #endregion
 
+    public IEnumerator Knockback(Vector2 force, float duration)
+    {
+        float elapsedTime = 0;
+
+        while (duration > elapsedTime)
+        {
+            elapsedTime += Time.deltaTime;
+
+            Vector2 knockback = new Vector2(-transform.localScale.x * force.x, force.y);
+            myRigidbody.AddForce(knockback);
+        }
+
+        yield return 0;
+    }
 
     private void OnDrawGizmosSelected()
     {

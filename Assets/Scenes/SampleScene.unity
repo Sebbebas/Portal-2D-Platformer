@@ -1408,7 +1408,8 @@ GameObject:
   - component: {fileID: 1601771257}
   - component: {fileID: 1601771256}
   - component: {fileID: 1601771255}
-  - component: {fileID: 1601771260}
+  - component: {fileID: 1601771254}
+  - component: {fileID: 1601771259}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: Untagged
@@ -1534,8 +1535,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1601771260
+--- !u!114 &1601771259
 MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1601771253}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a640d9170ca28f42a43a42101060b4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1001 &1772572960917573476
+PrefabInstance:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1562,6 +1575,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 602538528125468522, guid: 65f86b4f6430cda4dbaeef42e8074902, type: 3}
+      propertyPath: maxHealth
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 602538528125468522, guid: 65f86b4f6430cda4dbaeef42e8074902, type: 3}
+      propertyPath: healthBarSlideSpeed
+      value: 0.005
+      objectReference: {fileID: 0}
     - target: {fileID: 3426567041957597976, guid: 65f86b4f6430cda4dbaeef42e8074902, type: 3}
       propertyPath: m_Layer
       value: 3
@@ -1626,8 +1647,19 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 6194501254844925572, guid: 65f86b4f6430cda4dbaeef42e8074902, type: 3}
+    - target: {fileID: 7593533567982144993, guid: 65f86b4f6430cda4dbaeef42e8074902, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7593533567982144993, guid: 65f86b4f6430cda4dbaeef42e8074902, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7593533567982144993, guid: 65f86b4f6430cda4dbaeef42e8074902, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

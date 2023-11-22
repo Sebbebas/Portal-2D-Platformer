@@ -27,4 +27,12 @@ public class EnemyScript : MonoBehaviour
         proj.GetComponent<Rigidbody2D>().velocity = direction * projectileSpeed;
         proj.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
     }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player")) 
+        { 
+            StartCoroutine(FindObjectOfType<Playermovement>().Knockback(new Vector2(20.0f, 5.0f), 0.5f)); 
+        }
+    }
 }
