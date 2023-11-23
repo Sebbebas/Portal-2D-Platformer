@@ -1,9 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyScript : MonoBehaviour
 {
+    [SerializeField] float lifeTime = 5f;
     public float speed = 2f;
     public GameObject projectile;
     public float projectileSpeed = 5f;
@@ -26,6 +28,7 @@ public class EnemyScript : MonoBehaviour
         GameObject proj = Instantiate(projectile, transform.position, Quaternion.identity);
         proj.GetComponent<Rigidbody2D>().velocity = direction * projectileSpeed;
         proj.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
+        Destroy(proj, lifeTime);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

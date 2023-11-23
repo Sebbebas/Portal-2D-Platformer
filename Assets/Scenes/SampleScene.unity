@@ -1700,6 +1700,10 @@ PrefabInstance:
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 602538528125468522, guid: 65f86b4f6430cda4dbaeef42e8074902, type: 3}
+      propertyPath: invisDuration
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 602538528125468522, guid: 65f86b4f6430cda4dbaeef42e8074902, type: 3}
       propertyPath: healthBarSlideSpeed
       value: 0.005
       objectReference: {fileID: 0}
@@ -1761,6 +1765,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6238524069571189555, guid: 65f86b4f6430cda4dbaeef42e8074902, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7534293771589156938, guid: 65f86b4f6430cda4dbaeef42e8074902, type: 3}
+      propertyPath: m_IsTrigger
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7593533567982144993, guid: 65f86b4f6430cda4dbaeef42e8074902, type: 3}
