@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class EnemyScript : MonoBehaviour
 {
-    public float speed = 2f;
-    public GameObject projectile;
-    public float projectileSpeed = 5f;
-    public float shootingInterval = 1f;
+    [SerializeField] float speed = 2f;
+    [SerializeField] GameObject projectile;
+    [SerializeField] float projectileSpeed = 5f;
+    [SerializeField] float shootingInterval = 1f;
 
     private Transform player;
 
