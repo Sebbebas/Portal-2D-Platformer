@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraHandler : MonoBehaviour
+public class CameraController : MonoBehaviour
 {
     [SerializeField] float moveSpeed = 1;
     [SerializeField] float zoomSpeed = 0.0125f;
@@ -30,7 +30,7 @@ public class CameraHandler : MonoBehaviour
 
     private void Zoom()
     {
-        if(zoomActive)
+        if (zoomActive)
         {
             mainCam.orthographicSize = Mathf.Lerp(mainCam.orthographicSize, zoomSize, zoomSpeed);
         }
