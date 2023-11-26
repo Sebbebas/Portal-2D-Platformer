@@ -16,8 +16,8 @@ TagManager:
   - Ground
   - Enemy
   - Bullet
-  - wall
-  - 
+  - Wall
+  - Dashable
   - 
   - 
   - 

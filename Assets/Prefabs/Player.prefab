@@ -382,7 +382,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 3359045810746907017}
         m_TargetAssemblyTypeName: PlayerMove, Assembly-CSharp
-        m_MethodName: OnDashInput
+        m_MethodName: Dash
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -524,12 +524,12 @@ MonoBehaviour:
   coyoteTime: 0.2
   dashCheckLayers:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 1024
   dashStrenght: 10
   dashTime: 0.2
   groundCheckLayers:
     serializedVersion: 2
-    m_Bits: 320
+    m_Bits: 1088
   groundCheckOffset: {x: 0, y: 0.7}
   groundCheckRadius: 0.4
   myRigidbody: {fileID: 1900129800963196871}
