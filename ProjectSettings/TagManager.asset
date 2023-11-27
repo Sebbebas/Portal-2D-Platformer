@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Enemy
   - Ground
+  - Portal
   layers:
   - Default
   - TransparentFX
@@ -16,9 +17,9 @@ TagManager:
   - Ground
   - Enemy
   - Bullet
-  - wall
-  - 
-  - 
+  - Wall
+  - Portal
+  - Dashable
   - 
   - 
   - 
@@ -42,4 +43,16 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Player
+    uniqueID: 912686953
+    locked: 0
+  - name: Enviorment
+    uniqueID: 1243499201
+    locked: 0
+  - name: Portal
+    uniqueID: 724010601
+    locked: 0
+  - name: Enemy
+    uniqueID: 3936022477
     locked: 0
