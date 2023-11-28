@@ -1,7 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 public class PlayerMove : MonoBehaviour
 {
@@ -18,8 +21,10 @@ public class PlayerMove : MonoBehaviour
 
     [Header("Dash")]
     [SerializeField] LayerMask dashCheckLayers;
+    [SerializeField] LayerMask dashObstacles;
     [SerializeField] float dashStrenght = 10f;
-    [SerializeField] float dashTime = 0.2f;
+    [SerializeField] float dashDuration = 1f;
+    [SerializeField] float dashCooldown = 0.2f;
 
     [Header("Grounded")]
     [SerializeField] LayerMask groundCheckLayers;
@@ -38,7 +43,6 @@ public class PlayerMove : MonoBehaviour
     bool isDashing;
 
     Vector2 moveInput;
-    Vector2 dashDirection;
 
     private void Start()
     {
@@ -54,9 +58,9 @@ public class PlayerMove : MonoBehaviour
         GroundCheck();
         DashCheck();
 
-        if (isDashing)
+        if (!isDashing)
         {
-            return;
+            CheckForDashInput();
         }
     }
 
@@ -87,7 +91,8 @@ public class PlayerMove : MonoBehaviour
     {
         if (context.performed && canDash)
         {
-            //StartCoroutine(DashCoroutine());
+            Vector2 dashDirection = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")).normalized;
+            StartCoroutine(DashCoroutine(dashDirection));
         }
     }
 
@@ -98,7 +103,7 @@ public class PlayerMove : MonoBehaviour
 
         myRigidbody.AddForce(accelerationVector);
 
-        if(myRigidbody.velocity.magnitude > movementSpeed)
+        if (myRigidbody.velocity.magnitude > movementSpeed)
         {
             myRigidbody.velocity = myRigidbody.velocity.normalized * movementSpeed;
         }
@@ -136,11 +141,70 @@ public class PlayerMove : MonoBehaviour
         canDash = Physics2D.OverlapCircle(dashCheckPosition, groundCheckRadius, dashCheckLayers);
     }
 
+    private void CheckForDashInput()
+    {
+        /*float horizontalInput = Input.GetAxis("Horizontal");
+        float verticalInput = Input.GetAxis("Vertical");
+
+        if (horizontalInput != 0 || verticalInput != 0)
+        {
+            Vector2 dashDirection = new Vector2(horizontalInput, verticalInput).normalized;
+            StartCoroutine(DashCoroutine(dashDirection));
+        }*/
+    }
+
     private IEnumerator CoyoteTimeCoroutine()
     {
         isGrounded = true;
         yield return new WaitForSeconds(coyoteTime);
         isGrounded = false;
+    }
+
+    private IEnumerator DashCoroutine(Vector2 dashDirection)
+    {
+        /*canDash = false;
+        isDashing = true;
+        float originalGravity = myRigidbody.gravityScale;
+        myRigidbody.gravityScale = 0f;
+        Vector2 direction = new Vector2(moveInput.x, moveInput.y);
+
+        if (direction == Vector2.zero)
+        {
+            direction = new Vector2(transform.localScale.x, 0f);
+        }
+
+        myRigidbody.velocity = direction.normalized * dashStrenght;
+
+        yield return new WaitForSeconds(dashDuration);
+        myRigidbody.velocity = new Vector2(myRigidbody.velocity.x, myRigidbody.velocity.y * 0.5f);
+        myRigidbody.gravityScale = originalGravity * 1.5f;
+
+        isDashing = false;
+        yield return new WaitForSeconds(dashCooldown);
+        myRigidbody.gravityScale = originalGravity;*/
+
+        isDashing = true;
+
+        Vector2 startPosition = myRigidbody.position;
+        Vector2 endPosition = startPosition + dashDirection * dashStrenght;
+
+        RaycastHit2D hit = Physics2D.Linecast(startPosition, endPosition, dashObstacles);
+
+        if (hit.collider != null)
+        {
+            endPosition = hit.point - dashDirection * 0.1f;
+        }
+
+        float dashTimer = 0f;
+
+        while (dashTimer < dashCooldown)
+        {
+            myRigidbody.MovePosition(Vector2.Lerp(startPosition, endPosition, dashTimer / dashDuration));
+            dashTimer += Time.deltaTime;
+            yield return null;
+        }
+
+        isDashing = false;
     }
 
     private void OnDrawGizmosSelected()
