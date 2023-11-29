@@ -19,6 +19,7 @@ public class WeaponHandler : MonoBehaviour
     {
         public Weapon AvailableWeapons;
         public Image hotbar;
+        public string inputKey;
     }
 
     [SerializeField] WeaponStruct[] state;
@@ -39,37 +40,41 @@ public class WeaponHandler : MonoBehaviour
 
     private void HandleWeaponSwap()
     {
-        //foreach (var weapon in AvailableWeapons) 
-        //{
-        //    if (weapon == CurrentWeapon)
-        //    { 
-        //        weapon.gameObject.SetActive(true);
-        //    }
-        //    else
-        //    {
-        //        weapon.gameObject.SetActive(false);
-        //    }
-        //}
-
-
-        mouseAxisDelta += Input.mouseScrollDelta.y;
-        if (Mathf.Abs(mouseAxisDelta) > mouseScrollDistance)
+        foreach (WeaponStruct weaponStruct in state)
         {
-            int swapDirection = (int)Mathf.Sign(mouseAxisDelta);
-            mouseAxisDelta -= swapDirection * mouseScrollDistance;
-
-            int currentWeaponIndex = (int)CurrentWeapon.WeaponType;
-            currentWeaponIndex += swapDirection;
-
-            if (currentWeaponIndex < 0)
+            if (weaponStruct.AvailableWeapons == CurrentWeapon)
             {
-                currentWeaponIndex = (int)WeaponState.Total + currentWeaponIndex;
+                weaponStruct.AvailableWeapons.gameObject.SetActive(true);
+                weaponStruct.hotbar.gameObject.GetComponent<Image>().color = Color.white;
+                CurrentWeapon = weaponStruct.AvailableWeapons;
             }
-            if (currentWeaponIndex >= (int)WeaponState.Total)
+            else
             {
-                currentWeaponIndex = 0;
+                weaponStruct.AvailableWeapons.gameObject.SetActive(false);
+                weaponStruct.hotbar.gameObject.GetComponent<Image>().color = Color.gray;
+
+                if (Input.GetKeyDown(weaponStruct.inputKey)) { CurrentWeapon = weaponStruct.AvailableWeapons; }
             }
-            //CurrentWeapon = AvailableWeapons[currentWeaponIndex];
         }
+
+        //mouseAxisDelta += Input.mouseScrollDelta.y;
+        //if (Mathf.Abs(mouseAxisDelta) > mouseScrollDistance)
+        //{
+        //    int swapDirection = (int)Mathf.Sign(mouseAxisDelta);
+        //    mouseAxisDelta -= swapDirection * mouseScrollDistance;
+
+        //    int currentWeaponIndex = (int)CurrentWeapon.WeaponType;
+        //    currentWeaponIndex += swapDirection;
+
+        //    if (currentWeaponIndex < 0)
+        //    {
+        //        currentWeaponIndex = (int)WeaponState.Total + currentWeaponIndex;
+        //    }
+        //    if (currentWeaponIndex >= (int)WeaponState.Total)
+        //    {
+        //        currentWeaponIndex = 0;
+        //    }
+        //    CurrentWeapon = weaponStruct.AvailableWeapons;
+        //}
     }
 }
