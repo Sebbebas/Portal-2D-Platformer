@@ -765,7 +765,7 @@ GameObject:
   - component: {fileID: 5926193611723377019}
   - component: {fileID: 7969158438793514308}
   m_Layer: 3
-  m_Name: Gun Holder
+  m_Name: Gun Handler
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -802,13 +802,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   state:
+  - AvailableWeapons: {fileID: 3559088530594723326}
+    hotbar: {fileID: 5229206512394563128}
+    inputKey: 1
   - AvailableWeapons: {fileID: 0}
-    hotbar: {fileID: 0}
-  - AvailableWeapons: {fileID: 0}
-    hotbar: {fileID: 0}
-  - AvailableWeapons: {fileID: 0}
-    hotbar: {fileID: 0}
-  CurrentWeapon: {fileID: 6738527918042529407}
+    hotbar: {fileID: 5225729306838607932}
+    inputKey: 2
+  - AvailableWeapons: {fileID: 1175140723700297920}
+    hotbar: {fileID: 1428706795418151177}
+    inputKey: 3
+  CurrentWeapon: {fileID: 3559088530594723326}
   mouseScrollDistance: 1
 --- !u!1 &5482535656052482928
 GameObject:
@@ -1084,7 +1087,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8155178567718200429}
-  - component: {fileID: 6738527918042529407}
+  - component: {fileID: 7278348797497888493}
   m_Layer: 3
   m_Name: Portalgun
   m_TagString: Untagged
@@ -1107,7 +1110,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 5926193611723377019}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6738527918042529407
+--- !u!114 &7278348797497888493
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1116,11 +1119,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 8878226033522392777}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a56cf9480a852b24ab65beae196e74e4, type: 3}
+  m_Script: {fileID: 11500000, guid: 98461b598909a0f4ea71c2b878acf603, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  WeaponType: 1
-  weaponRange: 250
+  WeaponType: 0
+  weaponRange: 100
   ignoreHitMask:
     serializedVersion: 2
     m_Bits: 0

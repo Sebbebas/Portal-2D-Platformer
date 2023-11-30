@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class CameraController : MonoBehaviour
 {
@@ -15,7 +17,7 @@ public class CameraController : MonoBehaviour
     [SerializeField] Transform player;
     [SerializeField] Vector3 offset;
 
-
+    private bool moveToCamera;
 
     private void Update()
     {
@@ -26,6 +28,14 @@ public class CameraController : MonoBehaviour
     private void LateUpdate()
     {
         Zoom();
+        MoveCamToMouse();
+    }
+
+    private void MoveCamToMouse()
+    {
+        if (!moveToCamera) { return; }
+        Vector3 camPos = mainCam.ScreenToWorldPoint(Input.mousePosition);
+        //Vector2.Lerp(transform.position.x, camPos.x, 1f);
     }
 
     private void Zoom()
@@ -38,5 +48,23 @@ public class CameraController : MonoBehaviour
         {
             mainCam.orthographicSize = Mathf.Lerp(mainCam.orthographicSize, originalSize, zoomSpeed);
         }
+    }
+
+    public void SetCameraToMouse(bool moveToMouse)
+    {
+        if (moveToMouse) { moveToCamera = true; } else { moveToCamera = false; }
+    }
+
+    public bool GetCameraToMouseBool()
+    {
+        return moveToCamera;
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Vector3 nextCamPos = mainCam.ScreenToWorldPoint(Input.mousePosition);
+
+        Gizmos.color = Color.green;
+        Gizmos.DrawLine(player.position, nextCamPos);
     }
 }

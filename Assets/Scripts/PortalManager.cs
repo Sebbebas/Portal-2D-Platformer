@@ -11,6 +11,11 @@ public class PortalManager : MonoBehaviour
     private void Update()
     {
         activePortals = GameObject.FindGameObjectsWithTag("Portal");
+
+        foreach (var portal in activePortals)
+        {
+            
+        }
     }
 
     public void PortalSpawn(Vector2 pos, int color)
