@@ -5,11 +5,14 @@ using UnityEngine;
 
 public class EnemyScript : MonoBehaviour
 {
-    [SerializeField] float speed = 2f;
     [SerializeField] GameObject projectile;
+    [SerializeField] GameObject deathEffect;
+    [SerializeField] float speed = 2f;
     [SerializeField] float projectileSpeed = 5f;
     [SerializeField] float shootingInterval = 1f;
     [SerializeField] float detectionRange = 5f;
+    [SerializeField] int health = 100;
+   
 
     private Transform player;
 
@@ -32,14 +35,29 @@ public class EnemyScript : MonoBehaviour
             GameObject proj = Instantiate(projectile, transform.position, Quaternion.identity);
             proj.GetComponent<Rigidbody2D>().velocity = direction * projectileSpeed;
             proj.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
+
+            //Get EnemyWeapon and call the Shoot method
+            EnemyWeapon enemyWeapon = GetComponent<EnemyWeapon>();
+            if (enemyWeapon != null)
+            {
+                enemyWeapon.Shoot();
+            }
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    public void TakeDamage (int damage)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        health -= damage;
+
+        if (health <= 0)
         {
-            StartCoroutine(FindObjectOfType<Playermovement>().Knockback(new Vector2(20.0f, 5.0f), 0.5f));
+            Die();
         }
+    }
+    //Dö
+    void Die ()
+    {
+        Instantiate(deathEffect, transform.position, Quaternion.identity);
+        Destroy(gameObject);
     }
 }
