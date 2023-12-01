@@ -8,21 +8,22 @@ public class PlayerMove : MonoBehaviour
     // Serialized Fields
 
     [Header("Movement")]
-    [SerializeField] float movementSpeed = 9f; //Vad gör den här
+    [SerializeField, Tooltip("Sebbe vad gör movementSpeed")] float movementSpeed = 9f; 
     [SerializeField] float acceleration = 3f;
 
     [Header("Jump")]
-    [SerializeField] float jumpForce = 10f;
+    [SerializeField, Tooltip("Doesn't affect jump height any higher because fuck u")] float jumpForce = 20f;
     [SerializeField] float jumpFall = 2.5f;
     [SerializeField] float coyoteTime = 0.1f;
 
     [Header("Dash")]
-    [SerializeField] LayerMask dashCheckLayers;
+    [SerializeField, Tooltip("Dashable layers")] LayerMask dashCheckLayers;
     [SerializeField] float dashStrenght = 10f;
-    [SerializeField] float dashTime = 0.2f;
+    [SerializeField] float dashDuration = 0.2f;
+    [SerializeField] float dashCooldown = 1f;
 
     [Header("Grounded")]
-    [SerializeField] LayerMask groundCheckLayers;
+    [SerializeField, Tooltip("Jumpable layers")] LayerMask groundCheckLayers;
     [SerializeField] Vector2 groundCheckOffset;
     [SerializeField] float groundCheckRadius = 1f;
 
@@ -38,7 +39,6 @@ public class PlayerMove : MonoBehaviour
     bool isDashing;
 
     Vector2 moveInput;
-    Vector2 dashDirection;
 
     private void Start()
     {
@@ -49,15 +49,15 @@ public class PlayerMove : MonoBehaviour
 
     private void Update()
     {
+        moveInput.x = Input.GetAxisRaw("Horizontal");
+        moveInput.y = Input.GetAxisRaw("Vertical");
+
         Move();
         Flip();
         GroundCheck();
         DashCheck();
 
-        if (isDashing)
-        {
-            return;
-        }
+        if (isDashing) {return;}
     }
 
     public void OnMoveInput(InputAction.CallbackContext context)
@@ -69,11 +69,11 @@ public class PlayerMove : MonoBehaviour
     {
         if (context.performed && isGrounded)
         {
-            myRigidbody.velocity = new Vector2(myRigidbody.velocity.x, jumpForce);
+            myRigidbody.velocity = new Vector2(myRigidbody.velocity.x, jumpForce * 1.5f);
 
             if (myRigidbody.velocity.y >= 0f)
             {
-                myRigidbody.gravityScale = jumpFall * 1.5f;
+                myRigidbody.gravityScale = jumpFall;
             }
         }
 
@@ -87,7 +87,7 @@ public class PlayerMove : MonoBehaviour
     {
         if (context.performed && canDash)
         {
-            //StartCoroutine(DashCoroutine());
+            StartCoroutine(DashCoroutine());
         }
     }
 
@@ -141,6 +141,29 @@ public class PlayerMove : MonoBehaviour
         isGrounded = true;
         yield return new WaitForSeconds(coyoteTime);
         isGrounded = false;
+    }
+
+    private IEnumerator DashCoroutine()
+    {
+        canDash = false;
+        isDashing = true;
+        float originalGravity = myRigidbody.gravityScale;
+        myRigidbody.gravityScale = 0f;
+        Vector2 direction = new Vector2(moveInput.x, moveInput.y);
+
+        if (direction == Vector2.zero)
+        {
+            direction = new Vector2(transform.localScale.x, 0f);
+        }
+
+        myRigidbody.velocity = direction.normalized * dashStrenght;
+
+        yield return new WaitForSeconds(dashDuration);
+        myRigidbody.velocity = new Vector2(myRigidbody.velocity.x, myRigidbody.velocity.y * 0.5f);
+
+        isDashing = false;
+        yield return new WaitForSeconds(dashCooldown);
+        myRigidbody.gravityScale = originalGravity;
     }
 
     private void OnDrawGizmosSelected()

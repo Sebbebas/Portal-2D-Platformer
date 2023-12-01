@@ -8,7 +8,7 @@ public class Projectile : MonoBehaviour
     [SerializeField] int damage = 20;
     protected Rigidbody2D rb;
 
-    private void Start(Vector2 vector2)
+    private void Start()
     {
         Vector2 gubb = transform.right * speed;
         rb.velocity = gubb;
