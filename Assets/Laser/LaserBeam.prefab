@@ -351,12 +351,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a351ed0c7a6faea489e9bcc2c0ba0145, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  laserMode: 0
   lineRenderer: {fileID: 761583139093216644}
   laserStartPoint: {fileID: 1569659979211118684}
-  visibleRay: 0
   maxLineLength: 50
   laserIncrease: 100
-  laser: 0
+  switchTime: 5
+  pointOne: 0
+  pointTwo: 0
+  pointA: {x: 0, y: -1}
+  pointB: {x: 0, y: 1}
+  timeFromAToB: 1
+  timeToPauseOnPoint: 0.2
 --- !u!1 &6432300608546354396
 GameObject:
   m_ObjectHideFlags: 0
