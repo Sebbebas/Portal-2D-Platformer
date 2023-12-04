@@ -13,6 +13,8 @@ public class CameraController : MonoBehaviour
 
     [SerializeField] bool zoomActive = false;
 
+    [Space]
+
     [SerializeField] Camera mainCam;
     [SerializeField] Transform player;
     [SerializeField] Vector3 offset;
