@@ -12,8 +12,8 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] float healthBarSlideSpeed = 0.005f;
     [Header("Player")]
     [SerializeField] GameObject deathEffect;
-    [SerializeField] float health = 100f;
-    [SerializeField] float invisDuration;
+    [SerializeField] float maxHealth = 100f;
+    [SerializeField] float invisDuration = 0.5f;
 
     float currentHealth;
     bool isInvis = false;
@@ -25,17 +25,18 @@ public class PlayerHealth : MonoBehaviour
     {
         cameraShake = FindObjectOfType<CameraShake>();
 
-        currentHealth = health;
+        currentHealth = maxHealth;
     }
 
     private void Update()
     {
-        healthBarBG.fillAmount = Mathf.Lerp(healthBarBG.fillAmount, (currentHealth / health) - 0.01f, healthBarSlideSpeed);
+        healthBarBG.fillAmount = Mathf.Lerp(healthBarBG.fillAmount, healthBar.fillAmount - 0.01f, healthBarSlideSpeed);
 
         //För test
         if (Input.GetKeyDown(KeyCode.Escape)) 
         { 
             PlayerDamage(20);
+            StartCoroutine(FindObjectOfType<PlayerMove>().Knockback(new Vector2(50f, 10f), 0f, 0.3f));
         }
     }
 
@@ -44,14 +45,12 @@ public class PlayerHealth : MonoBehaviour
         if (!isInvis && !isDead)
         {
             currentHealth -= damage;
-            healthBar.fillAmount = currentHealth / health;
+            healthBar.fillAmount = currentHealth / maxHealth;
 
             StartCoroutine(cameraShake.Shake(0.1f, 0.2f));
             StartCoroutine(InvisRoutine());
 
-            health -= damage;
-
-            if (health <= 0)
+            if (currentHealth <= 0)
             {
                 Die();
             }
@@ -60,10 +59,9 @@ public class PlayerHealth : MonoBehaviour
 
     private void Die()
     {
-        
-        Instantiate(deathEffect, transform.position, Quaternion.identity);
+        //Instantiate(deathEffect, transform.position, Quaternion.identity);
         isDead = true;
-        Destroy(gameObject);
+        Debug.Log("Player is dead");
     }
 
     private IEnumerator InvisRoutine()
