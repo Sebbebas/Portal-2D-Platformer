@@ -17,7 +17,16 @@ public class CameraController : MonoBehaviour
     [SerializeField] Transform player;
     [SerializeField] Vector3 offset;
 
+    [Header("Cursor")]
+    [SerializeField] Texture2D mouseCursorTexture;
+    [SerializeField] Vector2 mouseCursorOffset;
+
     private bool moveToCamera;
+
+    private void Start()
+    {
+        Cursor.SetCursor(mouseCursorTexture, mouseCursorOffset, CursorMode.ForceSoftware);
+    }
 
     private void Update()
     {

@@ -4,15 +4,17 @@ using UnityEngine;
 
 public class Weapon : MonoBehaviour
 {
-    public WeaponState WeaponType;
-    public float weaponRange = 100f;
-    public LayerMask ignoreHitMask = 0;
-    public ParticleSystem hitParticle;
-    public bool lookTowardsCam = false;
+    [SerializeField] protected WeaponState WeaponType;
+    [SerializeField] protected LayerMask ignoreHitMask = 0;
+    [SerializeField] protected ParticleSystem hitParticle;
+    [SerializeField] protected bool lookTowardsCam = false;
 
+    [Space]
+    
     CameraController camController;
     
     protected Camera mainCam = null;
+
 
     protected void Start()
     {
@@ -22,14 +24,20 @@ public class Weapon : MonoBehaviour
 
     public void FixedUpdate()
     {
-        lookTowardsCam = camController.GetCameraToMouseBool();
-
-        if (lookTowardsCam ) { camController.SetCameraToMouse(true); }
-        else { camController.SetCameraToMouse(false); }
+        RotateTowardsCamera();
     }
 
     public virtual bool Fire()
     {
         return true;
+    }
+
+    private void RotateTowardsCamera()
+    {
+        //CAMERA CONTROLLER
+        lookTowardsCam = camController.GetCameraToMouseBool();
+
+        if (lookTowardsCam) { camController.SetCameraToMouse(true); }
+        else { camController.SetCameraToMouse(false); }
     }
 }
