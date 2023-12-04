@@ -8,11 +8,11 @@ public class PlayerMove : MonoBehaviour
     // Serialized Fields
 
     [Header("Movement")]
-    [SerializeField, Tooltip("Sebbe vad gör movementSpeed")] float movementSpeed = 9f; 
+    [SerializeField, Tooltip("Sebbe vad gör movementSpeed")] float movementSpeed = 12f; 
     [SerializeField] float acceleration = 3f;
 
     [Header("Jump")]
-    [SerializeField, Tooltip("Doesn't affect jump height any higher because fuck u")] float jumpForce = 20f;
+    [SerializeField, Tooltip("Is capped at movementSpeed")] float jumpForce = 20f;
     [SerializeField] float jumpFall = 2.5f;
     [SerializeField] float coyoteTime = 0.1f;
 
@@ -27,6 +27,16 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] Vector2 groundCheckOffset;
     [SerializeField] float groundCheckRadius = 1f;
 
+    [Header("Sticky Walls")]
+    [SerializeField] LayerMask wallCheckLayer;
+    [SerializeField] Vector2 wallCheckOffset;
+    [SerializeField] float wallCheckRadius = 1f;
+
+    [Header("On Ice")]
+    [SerializeField] LayerMask slipperyCheckLayers;
+    [SerializeField] float movementOnIce = 16f;
+    [SerializeField] float accelerationOnIce = 6f;
+
     [Space]
 
     [SerializeField] Rigidbody2D myRigidbody;
@@ -35,6 +45,9 @@ public class PlayerMove : MonoBehaviour
 
     bool isFacingRight;
     bool isGrounded;
+    bool isWalled;
+    bool isSlippery;
+
     bool canDash;
     bool isDashing;
 
@@ -44,7 +57,7 @@ public class PlayerMove : MonoBehaviour
     {
         myRigidbody = GetComponent<Rigidbody2D>();
 
-        isGrounded = false;
+        SetVariables();
     }
 
     private void Update()
@@ -55,11 +68,14 @@ public class PlayerMove : MonoBehaviour
         Move();
         Flip();
         GroundCheck();
+        WallCheck();
         DashCheck();
+        SlipperyCheck();
 
-        if (isDashing) {return;}
+        if(isDashing) { return; } 
     }
 
+    #region Inputs
     public void OnMoveInput(InputAction.CallbackContext context)
     {
         moveInput = context.ReadValue<Vector2>();
@@ -69,7 +85,7 @@ public class PlayerMove : MonoBehaviour
     {
         if (context.performed && isGrounded)
         {
-            myRigidbody.velocity = new Vector2(myRigidbody.velocity.x, jumpForce * 1.5f);
+            myRigidbody.velocity = new Vector2(myRigidbody.velocity.x, jumpForce);
 
             if (myRigidbody.velocity.y >= 0f)
             {
@@ -90,6 +106,7 @@ public class PlayerMove : MonoBehaviour
             StartCoroutine(DashCoroutine());
         }
     }
+    #endregion
 
     private void Move()
     {
@@ -115,11 +132,25 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
+    #region Find Layers
+    private void SlipperyCheck()
+    {
+        Vector2 slipperyCheckPos = (Vector2)transform.position - groundCheckOffset;
+
+        isSlippery = Physics2D.OverlapCircle(slipperyCheckPos, groundCheckRadius, slipperyCheckLayers);
+
+        if (isSlippery == true)
+        {
+            movementSpeed = movementOnIce;
+            acceleration = accelerationOnIce;
+        }
+    }
+
     private void GroundCheck()
     {
-        Vector2 groundCheckPosition = (Vector2)transform.position - groundCheckOffset;
+        Vector2 groundCheckPos = (Vector2)transform.position - groundCheckOffset;
 
-        if (Physics2D.OverlapCircle(groundCheckPosition, groundCheckRadius, groundCheckLayers))
+        if (Physics2D.OverlapCircle(groundCheckPos, groundCheckRadius, groundCheckLayers))
         {
             isGrounded = true;
         }
@@ -129,13 +160,27 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
+    private void WallCheck()
+    {
+        Vector2 wallCheckPos = (Vector2)transform.position - wallCheckOffset;
+
+        isWalled = Physics2D.OverlapCircle(wallCheckPos, wallCheckRadius, wallCheckLayer);
+
+        if (isWalled == true)
+        {
+             
+        }
+    }
+
     private void DashCheck()
     {
         Vector2 dashCheckPosition = (Vector2)transform.position - groundCheckOffset;
 
         canDash = Physics2D.OverlapCircle(dashCheckPosition, groundCheckRadius, dashCheckLayers);
     }
+    #endregion
 
+    #region Coroutines
     private IEnumerator CoyoteTimeCoroutine()
     {
         isGrounded = true;
@@ -165,10 +210,21 @@ public class PlayerMove : MonoBehaviour
         yield return new WaitForSeconds(dashCooldown);
         myRigidbody.gravityScale = originalGravity;
     }
+    #endregion
+
+    private void SetVariables()
+    {
+        isGrounded = false;
+        isWalled = false;
+        isSlippery = false;
+    }
 
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere((Vector2)transform.position - groundCheckOffset, groundCheckRadius);
+
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere((Vector2)transform.position - wallCheckOffset, wallCheckRadius);
     }
 }
