@@ -25,6 +25,9 @@ public class CameraController : MonoBehaviour
 
     private void Start()
     {
+        mainCam = FindObjectOfType<Camera>();
+        player = FindObjectOfType<PlayerMove>().transform;
+
         Cursor.SetCursor(mouseCursorTexture, mouseCursorOffset, CursorMode.ForceSoftware);
     }
 

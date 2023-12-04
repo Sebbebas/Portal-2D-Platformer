@@ -28,4 +28,13 @@ public class PlayerBullet : MonoBehaviour
 
         myRigidbody.velocity = new Vector2(direction.x * speed, direction.y * speed);
     }
+
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        if(other.gameObject.CompareTag("Ground"))
+        {
+            gameObject.GetComponent<SpriteRenderer>().enabled = false;
+            Destroy(this.gameObject, 1f);
+        }
+    }
 }

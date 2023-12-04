@@ -5082,7 +5082,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   WeaponType: 0
-  weaponRange: 0
   ignoreHitMask:
     serializedVersion: 2
     m_Bits: 0
@@ -5689,7 +5688,8 @@ MonoBehaviour:
   healthBar: {fileID: 6443761114588863294}
   healthBarBG: {fileID: 7593533567982144993}
   healthBarSlideSpeed: 0.005
-  maxHealth: 5
+  deathEffect: {fileID: 0}
+  health: 100
   invisDuration: 1
 --- !u!114 &230756939725989901
 MonoBehaviour:
@@ -5720,7 +5720,6 @@ MonoBehaviour:
   groundCheckOffset: {x: 0, y: 0.6}
   groundCheckRadius: 0.4
   myRigidbody: {fileID: 1900129800963196871}
-  waitTime: 1
 --- !u!1 &5338335277965498885
 GameObject:
   m_ObjectHideFlags: 0
@@ -6310,7 +6309,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   WeaponType: 2
-  weaponRange: 250
   ignoreHitMask:
     serializedVersion: 2
     m_Bits: 8
@@ -6414,9 +6412,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   WeaponType: 1
-  weaponRange: 250
   ignoreHitMask:
     serializedVersion: 2
     m_Bits: 8
   hitParticle: {fileID: 5583039783047951190}
   lookTowardsCam: 1
+  prodjectile: {fileID: 0}
+  gunPos: {fileID: 0}
