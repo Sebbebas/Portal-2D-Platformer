@@ -36,7 +36,7 @@ public class PlayerHealth : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape)) 
         { 
             PlayerDamage(20);
-            StartCoroutine(FindObjectOfType<PlayerMove>().Knockback(new Vector2(50f, 10f), 0f, 0.3f));
+            //StartCoroutine(FindObjectOfType<PlayerMove>().Knockback(new Vector2(50f, 10f), 0f, 0.3f));
         }
     }
 
