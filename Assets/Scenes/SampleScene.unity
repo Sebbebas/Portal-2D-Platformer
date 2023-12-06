@@ -4462,14 +4462,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 230756939725989901, guid: 65f86b4f6430cda4dbaeef42e8074902, type: 3}
-      propertyPath: jumpForce
-      value: 13
-      objectReference: {fileID: 0}
-    - target: {fileID: 230756939725989901, guid: 65f86b4f6430cda4dbaeef42e8074902, type: 3}
-      propertyPath: zoomCheckLayers.m_Bits
-      value: 16384
-      objectReference: {fileID: 0}
     - target: {fileID: 4852439808313440534, guid: 65f86b4f6430cda4dbaeef42e8074902, type: 3}
       propertyPath: m_Name
       value: Player

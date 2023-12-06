@@ -877,7 +877,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movementSpeed: 13
   acceleration: 3.25
-  jumpForce: 12
+  jumpForce: 13
   jumpFall: 3
   coyoteTime: 0.2
   dashCheckLayers:
@@ -893,7 +893,7 @@ MonoBehaviour:
   groundCheckRadius: 0.4
   wallCheckLayer:
     serializedVersion: 2
-    m_Bits: 512
+    m_Bits: 8192
   wallCheckOffset: {x: 0, y: 0}
   wallCheckRadius: 0.8
   slipperyCheckLayers:
@@ -901,6 +901,9 @@ MonoBehaviour:
     m_Bits: 4096
   movementOnIce: 16
   accelerationOnIce: 6
+  zoomCheckLayers:
+    serializedVersion: 2
+    m_Bits: 16384
   myRigidbody: {fileID: 1900129800963196871}
   frictionPhysics: {fileID: 6200000, guid: c641f5bd4d95da84f817df1117e01c14, type: 2}
 --- !u!1 &5338335277965498885

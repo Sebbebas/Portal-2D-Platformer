@@ -11,7 +11,7 @@ public class CameraController : MonoBehaviour
     [SerializeField] float zoomSize = 8;
     [SerializeField] float originalSize = 10;
 
-    [SerializeField] bool zoomActive = false;
+    [HideInInspector] public bool zoomActive;
 
     [Space]
 
@@ -74,10 +74,10 @@ public class CameraController : MonoBehaviour
         return moveToCamera;
     }
 
-    public bool GetZoomActive()
+    /*public bool GetZoomActive()
     {
         return zoomActive;
-    }
+    }*/
 
     private void OnDrawGizmosSelected()
     {

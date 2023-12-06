@@ -64,16 +64,17 @@ public class PlayerMove : MonoBehaviour
     bool canDash;
     bool isDashing;
 
-    bool isZooming;
-
     Vector2 moveInput;
+
+    private void Awake()
+    {
+        SetVariables();        
+    }
 
     private void Start()
     {
         myRigidbody = GetComponent<Rigidbody2D>();
-        cameraController = GetComponent<CameraController>();
-
-        SetVariables();
+        cameraController = FindObjectOfType<CameraController>();
     }
 
     private void Update()
@@ -88,7 +89,7 @@ public class PlayerMove : MonoBehaviour
         WallCheck();
         DashCheck();
         SlipperyCheck();
-        ZoomCheck(true);
+        ZoomCheck();
         #endregion
 
         if (isDashing) { return; } 
@@ -203,22 +204,11 @@ public class PlayerMove : MonoBehaviour
         canDash = Physics2D.OverlapCircle(dashCheckPos, groundCheckRadius, dashCheckLayers);
     }
 
-    private void ZoomCheck(bool zoom)
+    private void ZoomCheck()
     {
         Vector2 zoomCheckPos = (Vector2)transform.position - groundCheckOffset;
 
-        zoom = Physics2D.OverlapCircle(zoomCheckPos, groundCheckRadius, zoomCheckLayers);
-
-        if (zoom == true)
-        {
-            isZooming = true;
-            cameraController.GetZoomActive();
-        }
-    }
-
-    public bool GiveZoomActive()
-    {
-        return isZooming;
+        cameraController.zoomActive = Physics2D.OverlapCircle(zoomCheckPos, groundCheckRadius, zoomCheckLayers);
     }
     #endregion
 
