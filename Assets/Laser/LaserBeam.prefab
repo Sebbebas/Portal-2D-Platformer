@@ -160,7 +160,7 @@ LineRenderer:
   m_SortingOrder: 0
   m_Positions:
   - {x: 0, y: 0, z: 0}
-  - {x: 9.09, y: 0, z: 0}
+  - {x: 1.8, y: 0, z: 0}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 0.52448785
@@ -314,7 +314,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3134661464310894248}
-  - component: {fileID: 2525776543989662465}
+  - component: {fileID: 4244036385415052067}
   m_Layer: 0
   m_Name: LaserBeam
   m_TagString: Untagged
@@ -339,7 +339,7 @@ Transform:
   - {fileID: 3542587459255761146}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2525776543989662465
+--- !u!114 &4244036385415052067
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -348,19 +348,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 5599702300221259669}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a351ed0c7a6faea489e9bcc2c0ba0145, type: 3}
+  m_Script: {fileID: 11500000, guid: 0c801af99a7ca4d419659d5402086bd1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  laserMode: 0
   lineRenderer: {fileID: 761583139093216644}
   laserStartPoint: {fileID: 1569659979211118684}
   maxLineLength: 50
-  laserIncrease: 100
-  switchTime: 5
-  pointOne: 0
-  pointTwo: 0
-  pointA: {x: 0, y: -1}
-  pointB: {x: 0, y: 1}
+  laserIncrease: 20
+  laserMode: 0
+  switchTime: 2
+  angleA: 0
+  angleB: 180
+  pointA: {x: 5, y: 0}
+  pointB: {x: -5, y: 0}
   timeFromAToB: 1
   timeToPauseOnPoint: 0.2
 --- !u!1 &6432300608546354396

@@ -2,43 +2,44 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum LaserMode
-{
-    Still,
-    Rotate,
-    Moving,
-    Total
-}
+
+
 public class Laser : MonoBehaviour
 {
-    public LaserMode laserMode = LaserMode.Total;
-    private bool[] laserModeList = new bool[(int)LaserMode.Total];
+    public enum LaserMode
+    {
+        Still,
+        Rotate,
+        Moving,
+        MovedByInteracion,
+        Total
+    }
 
     [SerializeField] LineRenderer lineRenderer = null;
     [SerializeField] Transform laserStartPoint = null;
     [SerializeField] float maxLineLength = 50f;
-    [SerializeField] float laserIncrease = 20f;
+    [SerializeField] float laserIncrease = 100f;
+
+    public LaserMode laserMode = LaserMode.Total;
+
 
     [Header("Rotate Mode values")]
     [SerializeField] float switchTime = 2.0f; // Time to switch between two angles
-    [SerializeField] float pointOne = 0.0f;
-    [SerializeField] float pointTwo = 180.0f;
+    [SerializeField] float angleA = 0.0f;
+    [SerializeField] float angleB = 180.0f;
     
     //Move
     [Header("Moving Mode values")]
-    [SerializeField] Vector2 pointA = new Vector2(0, -1);
-    [SerializeField] Vector2 pointB = new Vector2(0, 1);
+    [SerializeField] Vector2 pointA = new Vector2(-1, 0);
+    [SerializeField] Vector2 pointB = new Vector2(1, 0);
     [SerializeField] float timeFromAToB = 1f;
     [SerializeField] float timeToPauseOnPoint = 0.2f;
 
     private bool towardsPointA;
-
     private Vector2 localPointA;
     private Vector2 localPointB;
-    //Move
-
     private Vector2 rayDirection;
-    private float laser;
+    private float laser = 0.01f;
     private float laserZRotation;
     private float timer = 0.0f;
     private bool towardsValueA;
@@ -46,17 +47,14 @@ public class Laser : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        laserModeList[(int)laserMode] = true;
-
-        laser = 0.002f * 5;
         lineRenderer.SetPosition(1, new Vector3(laser, 0, 0));
 
-        if (laserModeList[(int)LaserMode.Moving])
+        if (laserMode == LaserMode.Moving)
         {
             localPointA = (Vector2)transform.position + pointA;
             localPointB = (Vector2)transform.position + pointB;
 
-            StartCoroutine(UpAndDownRoutine());
+            StartCoroutine(MoveFromAToBRoutine());
         }
     }
 
@@ -67,7 +65,7 @@ public class Laser : MonoBehaviour
         rayDirection = new Vector2(Mathf.Cos(laserZRotation * Mathf.Deg2Rad), Mathf.Sin(laserZRotation * Mathf.Deg2Rad));
         FindCollision();
 
-        if (laserModeList[(int)LaserMode.Rotate])
+        if (laserMode == LaserMode.Rotate)
         {
             RotateZBackAndForth();
         }
@@ -84,11 +82,11 @@ public class Laser : MonoBehaviour
 
         if (towardsValueA)
         {
-            laserZRotation = Mathf.Lerp(pointOne, pointTwo, timer / switchTime);
+            laserZRotation = Mathf.Lerp(angleA, angleB, timer / switchTime);
         }
         else
         {
-            laserZRotation = Mathf.Lerp(pointTwo, pointOne, timer / switchTime);
+            laserZRotation = Mathf.Lerp(angleB, angleA, timer / switchTime);
         }
 
         transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, laserZRotation);
@@ -101,6 +99,21 @@ public class Laser : MonoBehaviour
         {
             lineRenderer.SetPosition(1, new Vector3(hit.distance, 0, 0));
             laser = hit.distance;
+
+            if (hit.collider.CompareTag("LaserBlockSides"))
+            {
+                Transform parentTransform = hit.collider.transform.parent;
+
+                if (parentTransform != null)
+                {
+                    LaserLedObject laserObject = parentTransform.GetComponent<LaserLedObject>();
+
+                    if (laserObject != null)
+                    {
+                        laserObject.TransformLaser();
+                    }
+                }
+            }
         }
         else
         {
@@ -113,7 +126,7 @@ public class Laser : MonoBehaviour
     }
 
     //Move
-    IEnumerator UpAndDownRoutine()
+    IEnumerator MoveFromAToBRoutine()
     {
         while (true)
         {
@@ -144,24 +157,29 @@ public class Laser : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         //RotateGizmos
-        Vector3 pointOnePosition = transform.position + Quaternion.Euler(0, 0, pointOne) * Vector3.right;
-        Vector3 pointTwoPosition = transform.position + Quaternion.Euler(0, 0, pointTwo) * Vector3.right;
+        if(laserMode == LaserMode.Rotate)
+        {
+            Vector3 pointOnePosition = transform.position + Quaternion.Euler(0, 0, angleA) * Vector3.right;
+            Vector3 pointTwoPosition = transform.position + Quaternion.Euler(0, 0, angleB) * Vector3.right;
 
-        Gizmos.color = Color.green; // Change the color if desired
-        Gizmos.DrawLine(transform.position, pointOnePosition);
-        Gizmos.DrawLine(transform.position, pointTwoPosition);
-
+            Gizmos.color = Color.green; // Change the color if desired
+            Gizmos.DrawLine(transform.position, pointOnePosition);
+            Gizmos.DrawLine(transform.position, pointTwoPosition);
+        }
 
         //MoveGizmos
-        Vector2 myPosition = transform.position;
+        if (laserMode == LaserMode.Moving)
+        {
+            Vector2 myPosition = transform.position;
 
-        Gizmos.color = Color.red;
+            Gizmos.color = Color.red;
 
-        Gizmos.DrawWireSphere(myPosition + pointA, 0.3f);
-        Gizmos.DrawWireSphere(myPosition + pointB, 0.3f);
+            Gizmos.DrawWireSphere(myPosition + pointA, 0.3f);
+            Gizmos.DrawWireSphere(myPosition + pointB, 0.3f);
 
-        Gizmos.color = Color.white;
+            Gizmos.color = Color.white;
 
-        Gizmos.DrawLine(myPosition + pointA, myPosition + pointB);
+            Gizmos.DrawLine(myPosition + pointA, myPosition + pointB);
+        }
     }
 }
