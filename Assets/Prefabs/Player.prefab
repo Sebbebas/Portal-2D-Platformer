@@ -218,7 +218,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1918790069678613851}
-  - component: {fileID: 3559088530594723326}
+  - component: {fileID: 7847021137962841734}
   m_Layer: 3
   m_Name: Unarmed
   m_TagString: Untagged
@@ -241,7 +241,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 5926193611723377019}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3559088530594723326
+--- !u!114 &7847021137962841734
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -250,7 +250,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 939337590082658180}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 933b42760bb7cf5468c0414c321d821c, type: 3}
+  m_Script: {fileID: 11500000, guid: 103ed193960a27f49a6a2559a3791e1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   WeaponType: 0
@@ -621,7 +621,7 @@ GameObject:
   - component: {fileID: 7534293771589156938}
   - component: {fileID: 1900129800963196871}
   - component: {fileID: 602538528125468522}
-  - component: {fileID: 230756939725989901}
+  - component: {fileID: 7337769674572338667}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -674,7 +674,7 @@ MonoBehaviour:
   m_ActionEvents:
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 230756939725989901}
+      - m_Target: {fileID: 7337769674572338667}
         m_TargetAssemblyTypeName: PlayerMove, Assembly-CSharp
         m_MethodName: OnMoveInput
         m_Mode: 0
@@ -698,7 +698,7 @@ MonoBehaviour:
     m_ActionName: Player/Fire[/Mouse/leftButton]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 230756939725989901}
+      - m_Target: {fileID: 7337769674572338667}
         m_TargetAssemblyTypeName: PlayerMove, Assembly-CSharp
         m_MethodName: OnJumpInput
         m_Mode: 0
@@ -714,7 +714,7 @@ MonoBehaviour:
     m_ActionName: Player/Jump[/Keyboard/space]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 230756939725989901}
+      - m_Target: {fileID: 7337769674572338667}
         m_TargetAssemblyTypeName: PlayerMove, Assembly-CSharp
         m_MethodName: OnDashInput
         m_Mode: 0
@@ -863,7 +863,7 @@ MonoBehaviour:
   deathEffect: {fileID: 0}
   maxHealth: 100
   invisDuration: 1
---- !u!114 &230756939725989901
+--- !u!114 &7337769674572338667
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -875,21 +875,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c23992b20242a414e90c3a0dc8f37d0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 13
-  acceleration: 3.25
-  jumpForce: 13
-  jumpFall: 3
-  coyoteTime: 0.2
+  movementSpeed: 12
+  acceleration: 3
+  jumpForce: 20
+  jumpFall: 2.5
+  coyoteTime: 0.1
   dashCheckLayers:
     serializedVersion: 2
     m_Bits: 2048
-  dashStrenght: 15
-  dashDuration: 0.1
+  dashStrenght: 10
+  dashDuration: 0.2
   dashCooldown: 1
   groundCheckLayers:
     serializedVersion: 2
-    m_Bits: 6208
-  groundCheckOffset: {x: 0, y: 0.6}
+    m_Bits: 30784
+  groundCheckOffset: {x: 0, y: 0.65}
   groundCheckRadius: 0.4
   wallCheckLayer:
     serializedVersion: 2
@@ -899,8 +899,8 @@ MonoBehaviour:
   slipperyCheckLayers:
     serializedVersion: 2
     m_Bits: 4096
-  movementOnIce: 16
-  accelerationOnIce: 6
+  movementOnIce: 14
+  accelerationOnIce: 1
   zoomCheckLayers:
     serializedVersion: 2
     m_Bits: 16384
@@ -954,16 +954,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   state:
-  - AvailableWeapons: {fileID: 3559088530594723326}
+  - AvailableWeapons: {fileID: 7847021137962841734}
     hotbar: {fileID: 5229206512394563128}
     inputKey: 1
   - AvailableWeapons: {fileID: 7278348797497888493}
     hotbar: {fileID: 5225729306838607932}
     inputKey: 2
-  - AvailableWeapons: {fileID: 1175140723700297920}
+  - AvailableWeapons: {fileID: 1378739015477208982}
     hotbar: {fileID: 1428706795418151177}
     inputKey: 3
-  CurrentWeapon: {fileID: 3559088530594723326}
+  CurrentWeapon: {fileID: 7847021137962841734}
   mouseScrollDistance: 1
 --- !u!1 &5482535656052482928
 GameObject:
@@ -1458,7 +1458,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4901577054332531045}
-  - component: {fileID: 1175140723700297920}
+  - component: {fileID: 1378739015477208982}
   m_Layer: 3
   m_Name: Gun
   m_TagString: Untagged
@@ -1481,7 +1481,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 5926193611723377019}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1175140723700297920
+--- !u!114 &1378739015477208982
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1490,13 +1490,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 8562355166996038035}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 933b42760bb7cf5468c0414c321d821c, type: 3}
+  m_Script: {fileID: 11500000, guid: 103ed193960a27f49a6a2559a3791e1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   WeaponType: 2
   ignoreHitMask:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 0
   hitParticle: {fileID: 0}
   lookTowardsCam: 0
 --- !u!1 &8878226033522392777
