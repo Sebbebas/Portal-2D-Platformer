@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -38,11 +39,22 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] float movementOnIce = 16f;
     [SerializeField] float accelerationOnIce = 6f;
 
+    [Header("Zooming Out")]
+    [SerializeField] LayerMask zoomCheckLayers;
+
     [Space]
 
+    //Cached reference
+
     [SerializeField] Rigidbody2D myRigidbody;
+    [SerializeField] PhysicsMaterial2D frictionPhysics;
+
+    CameraController cameraController;
 
     // Private variables
+
+    float originalMovement;
+    float originalAcceleration;
 
     bool isFacingRight;
     bool isGrounded;
@@ -52,11 +64,14 @@ public class PlayerMove : MonoBehaviour
     bool canDash;
     bool isDashing;
 
+    bool isZooming;
+
     Vector2 moveInput;
 
     private void Start()
     {
         myRigidbody = GetComponent<Rigidbody2D>();
+        cameraController = GetComponent<CameraController>();
 
         SetVariables();
     }
@@ -66,14 +81,17 @@ public class PlayerMove : MonoBehaviour
         moveInput.x = Input.GetAxisRaw("Horizontal");
         moveInput.y = Input.GetAxisRaw("Vertical");
 
+        #region calling functions
         Move();
         Flip();
         GroundCheck();
         WallCheck();
         DashCheck();
         SlipperyCheck();
+        ZoomCheck(true);
+        #endregion
 
-        if(isDashing) { return; } 
+        if (isDashing) { return; } 
     }
 
     #region Inputs
@@ -145,6 +163,11 @@ public class PlayerMove : MonoBehaviour
             movementSpeed = movementOnIce;
             acceleration = accelerationOnIce;
         }
+        else
+        {
+            movementSpeed = originalMovement;
+            acceleration = originalAcceleration;
+        }
     }
 
     private void GroundCheck()
@@ -169,15 +192,33 @@ public class PlayerMove : MonoBehaviour
 
         if (isWalled == true)
         {
-             
+            myRigidbody.sharedMaterial = frictionPhysics;
         }
     }
 
     private void DashCheck()
     {
-        Vector2 dashCheckPosition = (Vector2)transform.position - groundCheckOffset;
+        Vector2 dashCheckPos = (Vector2)transform.position - groundCheckOffset;
 
-        canDash = Physics2D.OverlapCircle(dashCheckPosition, groundCheckRadius, dashCheckLayers);
+        canDash = Physics2D.OverlapCircle(dashCheckPos, groundCheckRadius, dashCheckLayers);
+    }
+
+    private void ZoomCheck(bool zoom)
+    {
+        Vector2 zoomCheckPos = (Vector2)transform.position - groundCheckOffset;
+
+        zoom = Physics2D.OverlapCircle(zoomCheckPos, groundCheckRadius, zoomCheckLayers);
+
+        if (zoom == true)
+        {
+            isZooming = true;
+            cameraController.GetZoomActive();
+        }
+    }
+
+    public bool GiveZoomActive()
+    {
+        return isZooming;
     }
     #endregion
 
@@ -233,6 +274,9 @@ public class PlayerMove : MonoBehaviour
         isGrounded = false;
         isWalled = false;
         isSlippery = false;
+
+        originalAcceleration = acceleration;
+        originalMovement = movementSpeed;
     }
 
     private void OnDrawGizmosSelected()

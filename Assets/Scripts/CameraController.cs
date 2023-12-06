@@ -74,6 +74,11 @@ public class CameraController : MonoBehaviour
         return moveToCamera;
     }
 
+    public bool GetZoomActive()
+    {
+        return zoomActive;
+    }
+
     private void OnDrawGizmosSelected()
     {
         Vector3 nextCamPos = mainCam.ScreenToWorldPoint(Input.mousePosition);
