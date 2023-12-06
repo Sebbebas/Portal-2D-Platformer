@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,11 +10,11 @@ public class PlayerMove : MonoBehaviour
     // Serialized Fields
 
     [Header("Movement")]
-    [SerializeField, Tooltip("Sebbe vad gör movementSpeed")] float movementSpeed = 9f; 
+    [SerializeField, Tooltip("Sebbe vad gör movementSpeed")] float movementSpeed = 12f; 
     [SerializeField] float acceleration = 3f;
 
     [Header("Jump")]
-    [SerializeField, Tooltip("Doesn't affect jump height any higher because fuck u")] float jumpForce = 20f;
+    [SerializeField, Tooltip("Is capped at movementSpeed")] float jumpForce = 20f;
     [SerializeField] float jumpFall = 2.5f;
     [SerializeField] float coyoteTime = 0.1f;
 
@@ -27,24 +29,52 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] Vector2 groundCheckOffset;
     [SerializeField] float groundCheckRadius = 1f;
 
+    [Header("Sticky Walls")]
+    [SerializeField] LayerMask wallCheckLayer;
+    [SerializeField] Vector2 wallCheckOffset;
+    [SerializeField] float wallCheckRadius = 1f;
+
+    [Header("On Ice")]
+    [SerializeField] LayerMask slipperyCheckLayers;
+    [SerializeField] float movementOnIce = 16f;
+    [SerializeField] float accelerationOnIce = 6f;
+
+    [Header("Zooming Out")]
+    [SerializeField] LayerMask zoomCheckLayers;
+
     [Space]
 
+    //Cached reference
+
     [SerializeField] Rigidbody2D myRigidbody;
+    [SerializeField] PhysicsMaterial2D frictionPhysics;
+
+    CameraController cameraController;
 
     // Private variables
 
+    float originalMovement;
+    float originalAcceleration;
+
     bool isFacingRight;
     bool isGrounded;
+    bool isWalled;
+    bool isSlippery;
+
     bool canDash;
     bool isDashing;
 
     Vector2 moveInput;
 
+    private void Awake()
+    {
+        SetVariables();        
+    }
+
     private void Start()
     {
         myRigidbody = GetComponent<Rigidbody2D>();
-
-        isGrounded = false;
+        cameraController = FindObjectOfType<CameraController>();
     }
 
     private void Update()
@@ -52,14 +82,20 @@ public class PlayerMove : MonoBehaviour
         moveInput.x = Input.GetAxisRaw("Horizontal");
         moveInput.y = Input.GetAxisRaw("Vertical");
 
+        #region calling functions
         Move();
         Flip();
         GroundCheck();
+        WallCheck();
         DashCheck();
+        SlipperyCheck();
+        ZoomCheck();
+        #endregion
 
-        if (isDashing) {return;}
+        if (isDashing) { return; } 
     }
 
+    #region Inputs
     public void OnMoveInput(InputAction.CallbackContext context)
     {
         moveInput = context.ReadValue<Vector2>();
@@ -69,7 +105,7 @@ public class PlayerMove : MonoBehaviour
     {
         if (context.performed && isGrounded)
         {
-            myRigidbody.velocity = new Vector2(myRigidbody.velocity.x, jumpForce * 1.5f);
+            myRigidbody.velocity = new Vector2(myRigidbody.velocity.x, jumpForce);
 
             if (myRigidbody.velocity.y >= 0f)
             {
@@ -90,6 +126,7 @@ public class PlayerMove : MonoBehaviour
             StartCoroutine(DashCoroutine());
         }
     }
+    #endregion
 
     private void Move()
     {
@@ -115,11 +152,30 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
+    #region Find Layers
+    private void SlipperyCheck()
+    {
+        Vector2 slipperyCheckPos = (Vector2)transform.position - groundCheckOffset;
+
+        isSlippery = Physics2D.OverlapCircle(slipperyCheckPos, groundCheckRadius, slipperyCheckLayers);
+
+        if (isSlippery == true)
+        {
+            movementSpeed = movementOnIce;
+            acceleration = accelerationOnIce;
+        }
+        else
+        {
+            movementSpeed = originalMovement;
+            acceleration = originalAcceleration;
+        }
+    }
+
     private void GroundCheck()
     {
-        Vector2 groundCheckPosition = (Vector2)transform.position - groundCheckOffset;
+        Vector2 groundCheckPos = (Vector2)transform.position - groundCheckOffset;
 
-        if (Physics2D.OverlapCircle(groundCheckPosition, groundCheckRadius, groundCheckLayers))
+        if (Physics2D.OverlapCircle(groundCheckPos, groundCheckRadius, groundCheckLayers))
         {
             isGrounded = true;
         }
@@ -129,11 +185,47 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
+    private void WallCheck()
+    {
+        Vector2 wallCheckPos = (Vector2)transform.position - wallCheckOffset;
+
+        isWalled = Physics2D.OverlapCircle(wallCheckPos, wallCheckRadius, wallCheckLayer);
+
+        if (isWalled == true)
+        {
+            myRigidbody.sharedMaterial = frictionPhysics;
+        }
+    }
+
     private void DashCheck()
     {
-        Vector2 dashCheckPosition = (Vector2)transform.position - groundCheckOffset;
+        Vector2 dashCheckPos = (Vector2)transform.position - groundCheckOffset;
 
-        canDash = Physics2D.OverlapCircle(dashCheckPosition, groundCheckRadius, dashCheckLayers);
+        canDash = Physics2D.OverlapCircle(dashCheckPos, groundCheckRadius, dashCheckLayers);
+    }
+
+    private void ZoomCheck()
+    {
+        Vector2 zoomCheckPos = (Vector2)transform.position - groundCheckOffset;
+
+        cameraController.zoomActive = Physics2D.OverlapCircle(zoomCheckPos, groundCheckRadius, zoomCheckLayers);
+    }
+    #endregion
+
+    #region Coroutines
+
+    public IEnumerator Knockback(Vector2 force, float direction, float duration)
+    {
+        float elapsedTime = 0;
+
+        while (duration > elapsedTime)
+        {
+            elapsedTime += Time.deltaTime;
+            Vector2 knockback = new Vector2(direction * force.x, force.y); // Direction kan vara transform.right 
+            myRigidbody.velocity = knockback;
+
+            yield return null;
+        }
     }
 
     private IEnumerator CoyoteTimeCoroutine()
@@ -165,10 +257,24 @@ public class PlayerMove : MonoBehaviour
         yield return new WaitForSeconds(dashCooldown);
         myRigidbody.gravityScale = originalGravity;
     }
+    #endregion
+
+    private void SetVariables()
+    {
+        isGrounded = false;
+        isWalled = false;
+        isSlippery = false;
+
+        originalAcceleration = acceleration;
+        originalMovement = movementSpeed;
+    }
 
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere((Vector2)transform.position - groundCheckOffset, groundCheckRadius);
+
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere((Vector2)transform.position - wallCheckOffset, wallCheckRadius);
     }
 }

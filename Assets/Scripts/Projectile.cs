@@ -6,12 +6,15 @@ public class Projectile : MonoBehaviour
 {
     [SerializeField] float speed = 20f;
     [SerializeField] int damage = 20;
-    protected Rigidbody2D rb;
+    
+    Rigidbody2D myRigidbody;
 
     private void Start()
     {
-        Vector2 gubb = transform.right * speed;
-        rb.velocity = gubb;
+        myRigidbody = GetComponent<Rigidbody2D>();
+
+        Vector2 move = transform.right * speed;
+        myRigidbody.velocity = move;
     }
 
     void OnTriggerEnter2D (Collider2D hitInfo)
@@ -19,7 +22,8 @@ public class Projectile : MonoBehaviour
         PlayerHealth player = hitInfo.GetComponent<PlayerHealth>();
         if (player == null)
         {
-            player.PlayerDamage(20);
+            FindObjectOfType<PlayerHealth>().PlayerDamage(20);
+            StartCoroutine(FindObjectOfType<PlayerMove>().Knockback(new Vector2(50f, 5f), transform.right.x, 50f));
         }
         Destroy(gameObject);
     }
