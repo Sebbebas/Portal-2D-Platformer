@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -181,6 +182,21 @@ public class PlayerMove : MonoBehaviour
     #endregion
 
     #region Coroutines
+
+    public IEnumerator Knockback(Vector2 force, float direction, float duration)
+    {
+        float elapsedTime = 0;
+
+        while (duration > elapsedTime)
+        {
+            elapsedTime += Time.deltaTime;
+            Vector2 knockback = new Vector2(direction * force.x, force.y); // Direction kan vara transform.right 
+            myRigidbody.velocity = knockback;
+
+            yield return null;
+        }
+    }
+
     private IEnumerator CoyoteTimeCoroutine()
     {
         isGrounded = true;

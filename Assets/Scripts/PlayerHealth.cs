@@ -36,7 +36,7 @@ public class PlayerHealth : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape)) 
         { 
             PlayerDamage(20);
-            StartCoroutine(FindObjectOfType<PlayerMove>().Knockback(new Vector2(50f, 10f), 0f, 0.3f));
+            StartCoroutine(FindObjectOfType<PlayerMove>().Knockback(new Vector2(50f, 2f), 1, 0.2f));
         }
     }
 
@@ -67,9 +67,7 @@ public class PlayerHealth : MonoBehaviour
     private IEnumerator InvisRoutine()
     {
         isInvis = true;
-
         yield return new WaitForSeconds(invisDuration);
-
         isInvis = false;
     }
 }
