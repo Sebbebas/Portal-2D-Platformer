@@ -11,8 +11,9 @@ public class PlayerHealth : MonoBehaviour
     [Space]
     [SerializeField] float healthBarSlideSpeed = 0.005f;
     [Header("Player")]
-    [SerializeField] float maxHealth = 5.0f;
-    [SerializeField] float invisDuration;
+    [SerializeField] GameObject deathEffect;
+    [SerializeField] float maxHealth = 100f;
+    [SerializeField] float invisDuration = 0.5f;
 
     float currentHealth;
     bool isInvis = false;
@@ -29,10 +30,14 @@ public class PlayerHealth : MonoBehaviour
 
     private void Update()
     {
-        healthBarBG.fillAmount = Mathf.Lerp(healthBarBG.fillAmount, (currentHealth / maxHealth) - 0.01f, healthBarSlideSpeed);
+        healthBarBG.fillAmount = Mathf.Lerp(healthBarBG.fillAmount, healthBar.fillAmount - 0.01f, healthBarSlideSpeed);
 
         //För test
-        if (Input.GetKeyDown(KeyCode.Escape)) { PlayerDamage(1); }
+        if (Input.GetKeyDown(KeyCode.Escape)) 
+        { 
+            PlayerDamage(20);
+            StartCoroutine(FindObjectOfType<PlayerMove>().Knockback(new Vector2(50f, 2f), 1, 0.2f));
+        }
     }
 
     public void PlayerDamage(int damage)
@@ -54,16 +59,15 @@ public class PlayerHealth : MonoBehaviour
 
     private void Die()
     {
-        Debug.Log("Aj Pappa");
+        //Instantiate(deathEffect, transform.position, Quaternion.identity);
         isDead = true;
+        Debug.Log("Player is dead");
     }
 
     private IEnumerator InvisRoutine()
     {
         isInvis = true;
-
         yield return new WaitForSeconds(invisDuration);
-
         isInvis = false;
     }
 }

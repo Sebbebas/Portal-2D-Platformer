@@ -49,6 +49,15 @@ public class SceneLoader : MonoBehaviour
     }
     #endregion
 
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.U))
+        {
+            Debug.Log("U Reloads the scene");
+            ReloadScene();
+        }
+    }
+
     #region Base Scene Actions
     /// <summary>
     /// Loads <paramref name="sceneNumber"/> as the next scene

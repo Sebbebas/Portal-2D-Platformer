@@ -2,20 +2,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ProjectileScript : MonoBehaviour
+public class Projectile : MonoBehaviour
 {
-    [SerializeField] float lifeTime = 5f;
+    [SerializeField] float speed = 20f;
+    [SerializeField] int damage = 20;
+    
+    Rigidbody2D myRigidbody;
 
-    void Start()
+    private void Start()
     {
-        Destroy(gameObject, lifeTime);
+        myRigidbody = GetComponent<Rigidbody2D>();
+
+        Vector2 move = transform.right * speed;
+        myRigidbody.velocity = move;
     }
 
-    void OnCollisionEnter2D(Collision2D collision)
+    void OnTriggerEnter2D (Collider2D hitInfo)
     {
-        if (collision.gameObject.CompareTag("Ground"))
+        PlayerHealth player = hitInfo.GetComponent<PlayerHealth>();
+        if (player == null)
         {
-            Destroy(gameObject);
+            FindObjectOfType<PlayerHealth>().PlayerDamage(20);
+            StartCoroutine(FindObjectOfType<PlayerMove>().Knockback(new Vector2(50f, 5f), transform.right.x, 50f));
         }
+        Destroy(gameObject);
     }
 }
