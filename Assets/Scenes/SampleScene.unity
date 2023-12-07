@@ -4110,6 +4110,11 @@ TilemapCollider2D:
   m_MaximumTileChangeCount: 1000
   m_ExtrusionFactor: 0
   m_UseDelaunayMesh: 0
+--- !u!212 &1697541259 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 5689521546028523046, guid: 65f86b4f6430cda4dbaeef42e8074902, type: 3}
+  m_PrefabInstance: {fileID: 6582635345427672657}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1717035436
 GameObject:
   m_ObjectHideFlags: 0
@@ -4397,6 +4402,17 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!114 &2011747583 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7593533567982144993, guid: 65f86b4f6430cda4dbaeef42e8074902, type: 3}
+  m_PrefabInstance: {fileID: 6582635345427672657}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1957840859875297341
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4462,9 +4478,29 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 602538528125468522, guid: 65f86b4f6430cda4dbaeef42e8074902, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 1697541259}
+    - target: {fileID: 602538528125468522, guid: 65f86b4f6430cda4dbaeef42e8074902, type: 3}
+      propertyPath: blinkRate
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 602538528125468522, guid: 65f86b4f6430cda4dbaeef42e8074902, type: 3}
+      propertyPath: blinkSpeed
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 602538528125468522, guid: 65f86b4f6430cda4dbaeef42e8074902, type: 3}
+      propertyPath: lostHealthBar
+      value: 
+      objectReference: {fileID: 2011747583}
     - target: {fileID: 4852439808313440534, guid: 65f86b4f6430cda4dbaeef42e8074902, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 5482535656052482928, guid: 65f86b4f6430cda4dbaeef42e8074902, type: 3}
+      propertyPath: m_Name
+      value: Health
       objectReference: {fileID: 0}
     - target: {fileID: 6238524069571189555, guid: 65f86b4f6430cda4dbaeef42e8074902, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4505,6 +4541,30 @@ PrefabInstance:
     - target: {fileID: 6238524069571189555, guid: 65f86b4f6430cda4dbaeef42e8074902, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6443761114588863294, guid: 65f86b4f6430cda4dbaeef42e8074902, type: 3}
+      propertyPath: m_Color.b
+      value: 0.15471691
+      objectReference: {fileID: 0}
+    - target: {fileID: 6443761114588863294, guid: 65f86b4f6430cda4dbaeef42e8074902, type: 3}
+      propertyPath: m_Color.g
+      value: 0.15471691
+      objectReference: {fileID: 0}
+    - target: {fileID: 6443761114588863294, guid: 65f86b4f6430cda4dbaeef42e8074902, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7593533567982144993, guid: 65f86b4f6430cda4dbaeef42e8074902, type: 3}
+      propertyPath: m_Color.b
+      value: 0.71132076
+      objectReference: {fileID: 0}
+    - target: {fileID: 7593533567982144993, guid: 65f86b4f6430cda4dbaeef42e8074902, type: 3}
+      propertyPath: m_Color.g
+      value: 0.71132076
+      objectReference: {fileID: 0}
+    - target: {fileID: 7593533567982144993, guid: 65f86b4f6430cda4dbaeef42e8074902, type: 3}
+      propertyPath: m_Color.r
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
