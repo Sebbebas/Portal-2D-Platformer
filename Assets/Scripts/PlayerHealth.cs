@@ -21,14 +21,9 @@ public class PlayerHealth : MonoBehaviour
 
     float currentHealth;
     bool isInvis = false;
-    bool isDead = false;
-
-    CameraShake cameraShake;
 
     private void Start()
     {
-        cameraShake = FindObjectOfType<CameraShake>();
-        
         currentHealth = maxHealth;
     }
 
@@ -47,29 +42,36 @@ public class PlayerHealth : MonoBehaviour
 
     public void PlayerDamage(int damage)
     {
-        if (!isInvis && !isDead)
+        if (!isInvis)
         {
+            CameraShake cameraShake = FindObjectOfType<CameraShake>();
+
             currentHealth -= damage;
-            healthBar.fillAmount = currentHealth / maxHealth;
 
             StartCoroutine(cameraShake.Shake(0.1f, 0.2f));
             StartCoroutine(InvisRoutine());
 
             if (currentHealth <= 0)
             {
-                Die();
+                StartCoroutine(Die(1f));
             }
         }
     }
     private void HealthBarUpdate()
     {
+        healthBar.fillAmount = currentHealth / maxHealth;
         lostHealthBar.fillAmount = Mathf.Lerp(lostHealthBar.fillAmount, healthBar.fillAmount - 0.01f, slideSpeed);
     }
-
-    private void Die()
+  
+    public IEnumerator Die(float time)
     {
-        isDead = true;
-        Debug.Log("Player is dead");
+        CheckpointManager checkpointManager = FindObjectOfType<CheckpointManager>();
+
+        yield return new WaitForSeconds(time);
+        transform.position = checkpointManager.GetSpawnPoint();
+
+        currentHealth = maxHealth;
+        lostHealthBar.fillAmount = 1f;
     }
 
     private IEnumerator InvisRoutine()
