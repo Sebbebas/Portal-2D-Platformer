@@ -484,7 +484,7 @@ SpriteRenderer:
   m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: 158418023, guid: d8985b103a3f4124a9215e6e1af03277, type: 3}
-  m_Color: {r: 0.6930289, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.4716527, g: 0, b: 0.69411767, a: 1}
   m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
@@ -878,7 +878,7 @@ MonoBehaviour:
   movementSpeed: 12
   acceleration: 3
   jumpForce: 20
-  jumpFall: 2.5
+  jumpFall: 3.4
   coyoteTime: 0.1
   dashCheckLayers:
     serializedVersion: 2
@@ -889,23 +889,25 @@ MonoBehaviour:
   groundCheckLayers:
     serializedVersion: 2
     m_Bits: 30784
-  groundCheckOffset: {x: 0, y: 0.65}
-  groundCheckRadius: 0.4
+  groundCheckOffset: {x: 0, y: 0.5}
+  groundCheckRadius: 0.45
   wallCheckLayer:
     serializedVersion: 2
-    m_Bits: 8192
+    m_Bits: 16384
   wallCheckOffset: {x: 0, y: 0}
   wallCheckRadius: 0.8
   slipperyCheckLayers:
     serializedVersion: 2
     m_Bits: 4096
   movementOnIce: 14
-  accelerationOnIce: 1
+  accelerationOnIce: 1.03
   zoomCheckLayers:
     serializedVersion: 2
-    m_Bits: 16384
+    m_Bits: 8192
+  zoomCheckTag: 
   myRigidbody: {fileID: 1900129800963196871}
   frictionPhysics: {fileID: 6200000, guid: c641f5bd4d95da84f817df1117e01c14, type: 2}
+  playerPhysics: {fileID: 6200000, guid: 9f853d4f9f692c54b8b83465cb3995e0, type: 2}
 --- !u!1 &5338335277965498885
 GameObject:
   m_ObjectHideFlags: 0

@@ -11,34 +11,42 @@ public class PlayerMove : MonoBehaviour
     [SerializeField, Tooltip("Sebbe vad gör movementSpeed")] float movementSpeed = 12f; 
     [SerializeField] float acceleration = 3f;
 
+
     [Header("Jump")]
     [SerializeField, Tooltip("Is capped at movementSpeed")] float jumpForce = 20f;
     [SerializeField] float jumpFall = 2.5f;
-    [SerializeField] float coyoteTime = 0.1f;
+    [SerializeField] float coyoteTime = .1f;
 
     [Header("Dash")]
     [SerializeField, Tooltip("Dashable layers")] LayerMask dashCheckLayers;
-    [SerializeField] float dashStrenght = 10f;
-    [SerializeField] float dashDuration = 0.2f;
+    //[SerializeField, Tooltip("Dashable layers")] string dashCheckTag;
+    [SerializeField] float dashSpeed = 10f;
+    [SerializeField] float dashDuration = .2f;
     [SerializeField] float dashCooldown = 1f;
+    [SerializeField, Tooltip("Uses this gravity instead of jumpFall when dashing to allow longer dashes")] float dashGravity = 1f;
+    [SerializeField, Tooltip("How long it takes for player to come to a stop after dashing")] float dashDeccelerationTime = 0.25f;
 
     [Header("Grounded")]
-    [SerializeField, Tooltip("Jumpable layers")] LayerMask groundCheckLayers;
+    [SerializeField, Tooltip("Layer the player can jump on")] LayerMask groundCheckLayers;
     [SerializeField] Vector2 groundCheckOffset;
     [SerializeField] float groundCheckRadius = 1f;
 
     [Header("Sticky Walls")]
-    [SerializeField] LayerMask wallCheckLayer;
+    [SerializeField, Tooltip("Layers that player can stick to")] LayerMask wallCheckLayer;
+    //[SerializeField, Tooltip("Layers that player can stick to")] string wallCheckTag;
     [SerializeField] Vector2 wallCheckOffset;
     [SerializeField] float wallCheckRadius = 1f;
 
     [Header("On Ice")]
-    [SerializeField] LayerMask slipperyCheckLayers;
+    [SerializeField, Tooltip("Layers were the player gets less control over their movement")] LayerMask slipperyCheckLayers;
+    //[SerializeField, Tooltip("Layers were the player gets less control over their movement")] string slipperyCheckTag;
     [SerializeField] float movementOnIce = 16f;
     [SerializeField] float accelerationOnIce = 6f;
 
+
     [Header("Zooming Out")]
-    [SerializeField] LayerMask zoomCheckLayers;
+    [SerializeField, Tooltip("If the player stands on this the camera size will change")] LayerMask zoomCheckLayers;
+    //[SerializeField, Tooltip("If the player stands on this the camera size will change")] string zoomCheckTag;
 
     [Space]
 
@@ -46,6 +54,7 @@ public class PlayerMove : MonoBehaviour
 
     [SerializeField] Rigidbody2D myRigidbody;
     [SerializeField] PhysicsMaterial2D frictionPhysics;
+    [SerializeField] PhysicsMaterial2D playerPhysics;
 
     CameraController cameraController;
 
@@ -53,6 +62,7 @@ public class PlayerMove : MonoBehaviour
 
     float originalMovement;
     float originalAcceleration;
+    float dashCooldownTime;
 
     bool isFacingRight;
     bool isGrounded;
@@ -63,6 +73,7 @@ public class PlayerMove : MonoBehaviour
     bool isDashing;
 
     Vector2 moveInput;
+    Vector2 latestMoveDirection = new Vector2(1f, 0f);
 
     private void Awake()
     {
@@ -89,8 +100,6 @@ public class PlayerMove : MonoBehaviour
         SlipperyCheck();
         ZoomCheck();
         #endregion
-
-        if (isDashing) { return; } 
     }
 
     #region Inputs
@@ -103,9 +112,9 @@ public class PlayerMove : MonoBehaviour
     {
         if (context.performed && isGrounded)
         {
-            myRigidbody.velocity = new Vector2(myRigidbody.velocity.x, jumpForce);
+            Jump();
 
-            if (myRigidbody.velocity.y >= 0f)
+            if (myRigidbody.velocity.y >= 0f || isDashing == false)
             {
                 myRigidbody.gravityScale = jumpFall;
             }
@@ -119,9 +128,9 @@ public class PlayerMove : MonoBehaviour
 
     public void OnDashInput(InputAction.CallbackContext context)
     {
-        if (context.performed && canDash)
+        if (context.started && canDash)
         {
-            StartCoroutine(DashCoroutine());
+            StartCoroutine("Dash");
         }
     }
     #endregion
@@ -137,6 +146,16 @@ public class PlayerMove : MonoBehaviour
         {
             myRigidbody.velocity = myRigidbody.velocity.normalized * movementSpeed;
         }
+
+        if (moveInput.sqrMagnitude > 0.0f)
+        {
+            latestMoveDirection = moveInput;
+        }
+    }
+
+    private void Jump()
+    {
+        myRigidbody.velocity = new Vector2(myRigidbody.velocity.x, jumpForce);
     }
 
     private void Flip()
@@ -156,6 +175,7 @@ public class PlayerMove : MonoBehaviour
         Vector2 slipperyCheckPos = (Vector2)transform.position - groundCheckOffset;
 
         isSlippery = Physics2D.OverlapCircle(slipperyCheckPos, groundCheckRadius, slipperyCheckLayers);
+        //isSlippery = Physics2D.OverlapCircle(slipperyCheckPos, groundCheckRadius, LayerMask.GetMask(slipperyCheckTag)) != null;
 
         if (isSlippery == true)
         {
@@ -179,7 +199,7 @@ public class PlayerMove : MonoBehaviour
         }
         else
         {
-            StartCoroutine(CoyoteTimeCoroutine());
+            StartCoroutine("CoyoteTimeCoroutine");
         }
     }
 
@@ -188,10 +208,15 @@ public class PlayerMove : MonoBehaviour
         Vector2 wallCheckPos = (Vector2)transform.position - wallCheckOffset;
 
         isWalled = Physics2D.OverlapCircle(wallCheckPos, wallCheckRadius, wallCheckLayer);
+        //isWalled = Physics2D.OverlapCircle(wallCheckPos, wallCheckRadius, LayerMask.GetMask(wallCheckTag));
 
         if (isWalled == true)
         {
             myRigidbody.sharedMaterial = frictionPhysics;
+        }
+        else
+        {
+            myRigidbody.sharedMaterial = playerPhysics;
         }
     }
 
@@ -200,6 +225,7 @@ public class PlayerMove : MonoBehaviour
         Vector2 dashCheckPos = (Vector2)transform.position - groundCheckOffset;
 
         canDash = Physics2D.OverlapCircle(dashCheckPos, groundCheckRadius, dashCheckLayers);
+        //canDash = Physics2D.OverlapCircle(dashCheckPos, groundCheckRadius, LayerMask.GetMask(dashCheckTag));
     }
 
     private void ZoomCheck()
@@ -207,6 +233,7 @@ public class PlayerMove : MonoBehaviour
         Vector2 zoomCheckPos = (Vector2)transform.position - groundCheckOffset;
 
         cameraController.zoomActive = Physics2D.OverlapCircle(zoomCheckPos, groundCheckRadius, zoomCheckLayers);
+        //cameraController.zoomActive = Physics2D.OverlapCircle(zoomCheckPos, groundCheckRadius, LayerMask.GetMask(zoomCheckTag));
     }
     #endregion
 
@@ -219,7 +246,7 @@ public class PlayerMove : MonoBehaviour
         while (duration > elapsedTime)
         {
             elapsedTime += Time.deltaTime;
-            Vector2 knockback = new Vector2(direction * force.x, force.y); // Direction kan vara transform.right 
+            Vector2 knockback = new Vector2(direction * force.x, force.y);  
             myRigidbody.velocity = knockback;
 
             yield return null;
@@ -233,27 +260,18 @@ public class PlayerMove : MonoBehaviour
         isGrounded = false;
     }
 
-    private IEnumerator DashCoroutine()
+    private IEnumerator Dash()
     {
-        canDash = false;
         isDashing = true;
-        float originalGravity = myRigidbody.gravityScale;
-        myRigidbody.gravityScale = 0f;
-        Vector2 direction = new Vector2(moveInput.x, moveInput.y);
-
-        if (direction == Vector2.zero)
-        {
-            direction = new Vector2(transform.localScale.x, 0f);
-        }
-
-        myRigidbody.velocity = direction.normalized * dashStrenght;
-
+        myRigidbody.gravityScale = dashGravity;
+        myRigidbody.velocity = latestMoveDirection * dashSpeed;
         yield return new WaitForSeconds(dashDuration);
-        myRigidbody.velocity = new Vector2(myRigidbody.velocity.x, myRigidbody.velocity.y * 0.5f);
 
+        myRigidbody.velocity = Vector2.Lerp(myRigidbody.velocity, Vector2.zero, dashDeccelerationTime);
+        myRigidbody.gravityScale = jumpFall;
+
+        dashCooldown = dashCooldownTime;
         isDashing = false;
-        yield return new WaitForSeconds(dashCooldown);
-        myRigidbody.gravityScale = originalGravity;
     }
     #endregion
 
@@ -262,6 +280,9 @@ public class PlayerMove : MonoBehaviour
         isGrounded = false;
         isWalled = false;
         isSlippery = false;
+        isDashing = false;
+
+        dashCooldownTime = dashCooldown;
 
         originalAcceleration = acceleration;
         originalMovement = movementSpeed;

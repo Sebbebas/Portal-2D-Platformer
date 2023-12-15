@@ -8,6 +8,10 @@ TagManager:
   - Ground
   - Portal
   - Bullet
+  - Dashable
+  - Slippery
+  - Zoomin
+  - Sticky Wall
   layers:
   - Default
   - TransparentFX
@@ -22,8 +26,8 @@ TagManager:
   - Portal
   - Dashable
   - Slippery
+  - Zoomin
   - Sticky Wall
-  - Zooming
   - 
   - 
   - 
