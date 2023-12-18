@@ -91,6 +91,15 @@ public class PlayerMove : MonoBehaviour
         moveInput.x = Input.GetAxisRaw("Horizontal");
         moveInput.y = Input.GetAxisRaw("Vertical");
 
+        if(isDashing)
+        {
+            myRigidbody.gravityScale = dashGravity;
+        }
+        else
+        {
+            myRigidbody.gravityScale = jumpFall;
+        }
+
         #region calling functions
         Move();
         Flip();
@@ -113,11 +122,6 @@ public class PlayerMove : MonoBehaviour
         if (context.performed && isGrounded)
         {
             Jump();
-
-            if (myRigidbody.velocity.y >= 0f || isDashing == false)
-            {
-                myRigidbody.gravityScale = jumpFall;
-            }
         }
 
         if (context.canceled && myRigidbody.velocity.y > 0f)
@@ -263,12 +267,10 @@ public class PlayerMove : MonoBehaviour
     private IEnumerator Dash()
     {
         isDashing = true;
-        myRigidbody.gravityScale = dashGravity;
         myRigidbody.velocity = latestMoveDirection * dashSpeed;
         yield return new WaitForSeconds(dashDuration);
 
         myRigidbody.velocity = Vector2.Lerp(myRigidbody.velocity, Vector2.zero, dashDeccelerationTime);
-        myRigidbody.gravityScale = jumpFall;
 
         dashCooldown = dashCooldownTime;
         isDashing = false;
@@ -286,6 +288,8 @@ public class PlayerMove : MonoBehaviour
 
         originalAcceleration = acceleration;
         originalMovement = movementSpeed;
+
+        myRigidbody.gravityScale = jumpFall;
     }
 
     private void OnDrawGizmosSelected()

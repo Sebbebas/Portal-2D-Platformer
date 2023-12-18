@@ -58,7 +58,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 0.71132076, b: 0.71132076, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -393,7 +393,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.15471691, b: 0.15471691, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -620,7 +620,8 @@ GameObject:
   - component: {fileID: 9163072066733083093}
   - component: {fileID: 7534293771589156938}
   - component: {fileID: 1900129800963196871}
-  - component: {fileID: 602538528125468522}
+  - component: {fileID: 6244882335894722145}
+  - component: {fileID: 1800621762202731605}
   - component: {fileID: 7337769674572338667}
   m_Layer: 3
   m_Name: Player
@@ -845,7 +846,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
---- !u!114 &602538528125468522
+--- !u!114 &6244882335894722145
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -854,15 +855,37 @@ MonoBehaviour:
   m_GameObject: {fileID: 4852439808313440534}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2c52187758fecc94f82a664f9425a44b, type: 3}
+  m_Script: {fileID: 11500000, guid: 8fadf9fb2a83f2043acd3b4f8073fd2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthBar: {fileID: 6443761114588863294}
-  healthBarBG: {fileID: 7593533567982144993}
-  healthBarSlideSpeed: 0.005
+  player: {fileID: 5689521546028523046}
   deathEffect: {fileID: 0}
   maxHealth: 100
+  healthBar: {fileID: 6443761114588863294}
+  lostHealthBar: {fileID: 7593533567982144993}
+  slideSpeed: 0.005
   invisDuration: 1
+  blinkRate: 0.1
+--- !u!114 &1800621762202731605
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4852439808313440534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8fadf9fb2a83f2043acd3b4f8073fd2c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 5689521546028523046}
+  deathEffect: {fileID: 0}
+  maxHealth: 100
+  healthBar: {fileID: 6443761114588863294}
+  lostHealthBar: {fileID: 7593533567982144993}
+  slideSpeed: 0.005
+  invisDuration: 1
+  blinkRate: 0.1
 --- !u!114 &7337769674572338667
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -878,14 +901,16 @@ MonoBehaviour:
   movementSpeed: 12
   acceleration: 3
   jumpForce: 20
-  jumpFall: 3.4
+  jumpFall: 3.3
   coyoteTime: 0.1
   dashCheckLayers:
     serializedVersion: 2
     m_Bits: 2048
-  dashStrenght: 10
-  dashDuration: 0.2
+  dashSpeed: 20
+  dashDuration: 0.25
   dashCooldown: 1
+  dashGravity: 0
+  dashDeccelerationTime: 0.25
   groundCheckLayers:
     serializedVersion: 2
     m_Bits: 30784
@@ -900,11 +925,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4096
   movementOnIce: 14
-  accelerationOnIce: 1.03
+  accelerationOnIce: 1
   zoomCheckLayers:
     serializedVersion: 2
     m_Bits: 8192
-  zoomCheckTag: 
   myRigidbody: {fileID: 1900129800963196871}
   frictionPhysics: {fileID: 6200000, guid: c641f5bd4d95da84f817df1117e01c14, type: 2}
   playerPhysics: {fileID: 6200000, guid: 9f853d4f9f692c54b8b83465cb3995e0, type: 2}
@@ -977,7 +1001,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4171790545323160429}
   m_Layer: 3
-  m_Name: HealthBar
+  m_Name: Health
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
