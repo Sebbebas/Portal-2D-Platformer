@@ -10,7 +10,7 @@ public class Checkpoint : MonoBehaviour
     [Space]
     [SerializeField] LayerMask activatingLayers;
 
-    bool alreadyActive = false;
+    bool isActive = false;
 
     private void Start()
     {
@@ -22,31 +22,31 @@ public class Checkpoint : MonoBehaviour
         while (true) 
         {
             CheckpointManager checkpointManager = FindObjectOfType<CheckpointManager>();
-            Vector2 checkPosition = (Vector2)transform.position - activationOffset;
+            Vector2 point = (Vector2)transform.position - activationOffset;
 
-            if (Physics2D.OverlapCircle(checkPosition, activationRadius, activatingLayers) && !alreadyActive) 
+            if (Physics2D.OverlapCircle(point, activationRadius, activatingLayers) && !isActive) 
             {
                 checkpointManager.SetSpawnPoint((Vector2)transform.position + spawnOffset);
-                alreadyActive = true;
+                isActive = true;
                 Debug.Log("Checkpoint Activated");
             }
 
-            yield return new WaitForSeconds(1f);
+            yield return 0f;
         }
     }
 
     private void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.yellow;
+        Gizmos.color = Color.green;
         Gizmos.DrawWireSphere((Vector2)transform.position + activationOffset, activationRadius);
 
-        Gizmos.color = Color.yellow;
+        Gizmos.color = Color.green;
         Gizmos.DrawLine(transform.position, (Vector2)transform.position + activationOffset);
 
-        Gizmos.color = Color.green;
-        Gizmos.DrawSphere((Vector2)transform.position + spawnOffset, 0.25f);
+        Gizmos.color = Color.white;
+        Gizmos.DrawWireSphere((Vector2)transform.position + spawnOffset, 0.25f);
 
-        Gizmos.color = Color.green;
+        Gizmos.color = Color.white;
         Gizmos.DrawLine(transform.position, (Vector2)transform.position + spawnOffset);
     }
 }
