@@ -187,7 +187,7 @@ GameObject:
   - component: {fileID: 478488079}
   - component: {fileID: 478488078}
   - component: {fileID: 478488077}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Bounce Tilemap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
