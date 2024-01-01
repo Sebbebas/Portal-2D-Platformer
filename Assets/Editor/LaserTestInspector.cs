@@ -9,6 +9,8 @@ public class LaserEditor : Editor
     SerializedProperty maxLineLengthProperty;
     SerializedProperty laserIncreaseProperty;
     SerializedProperty laserModeProperty;
+    SerializedProperty startVFXProperty;
+    SerializedProperty endVFXProperty;
 
     SerializedProperty switchTimeProperty;
     SerializedProperty angleAProperty;
@@ -26,6 +28,8 @@ public class LaserEditor : Editor
         laserStartPointProperty = serializedObject.FindProperty("laserStartPoint");
         maxLineLengthProperty = serializedObject.FindProperty("maxLineLength");
         laserIncreaseProperty = serializedObject.FindProperty("laserIncrease");
+        startVFXProperty = serializedObject.FindProperty("startVFX");
+        endVFXProperty = serializedObject.FindProperty("endVFX");
 
         // LaserMode Specific Properties
         laserModeProperty = serializedObject.FindProperty("laserMode");
@@ -49,6 +53,8 @@ public class LaserEditor : Editor
         EditorGUILayout.PropertyField(laserStartPointProperty);
         EditorGUILayout.PropertyField(maxLineLengthProperty);
         EditorGUILayout.PropertyField(laserIncreaseProperty);
+        EditorGUILayout.PropertyField(startVFXProperty);
+        EditorGUILayout.PropertyField(endVFXProperty);
         EditorGUILayout.Space();
         EditorGUILayout.PropertyField(laserModeProperty);
 

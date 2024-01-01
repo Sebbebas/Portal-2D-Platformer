@@ -160,7 +160,7 @@ LineRenderer:
   m_SortingOrder: 0
   m_Positions:
   - {x: 0, y: 0, z: 0}
-  - {x: 1.8, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 0.52448785
@@ -217,7 +217,7 @@ LineRenderer:
     shadowBias: 0
     generateLightingData: 1
   m_MaskInteraction: 0
-  m_UseWorldSpace: 0
+  m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
 --- !u!1 &5300686006557686405
@@ -356,9 +356,9 @@ MonoBehaviour:
   maxLineLength: 50
   laserIncrease: 20
   laserMode: 0
-  switchTime: 2
-  angleA: 0
-  angleB: 180
+  switchTime: 4
+  angleA: -90
+  angleB: 90
   pointA: {x: 5, y: 0}
   pointB: {x: -5, y: 0}
   timeFromAToB: 1
@@ -388,7 +388,7 @@ Transform:
   m_GameObject: {fileID: 6432300608546354396}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.51, y: 0, z: 0}
+  m_LocalPosition: {x: 0.44, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

@@ -1,8 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-
-
 
 public class Laser : MonoBehaviour
 {
@@ -19,6 +18,10 @@ public class Laser : MonoBehaviour
     [SerializeField] Transform laserStartPoint = null;
     [SerializeField] float maxLineLength = 50f;
     [SerializeField] float laserIncrease = 100f;
+    [SerializeField] GameObject startVFX;
+    [SerializeField] GameObject endVFX;
+
+    private float currentMaxLineLength = 0.01f;
 
     public LaserMode laserMode = LaserMode.Total;
 
@@ -27,7 +30,7 @@ public class Laser : MonoBehaviour
     [SerializeField] float switchTime = 2.0f; // Time to switch between two angles
     [SerializeField] float angleA = 0.0f;
     [SerializeField] float angleB = 180.0f;
-    
+
     //Move
     [Header("Moving Mode values")]
     [SerializeField] Vector2 pointA = new Vector2(-1, 0);
@@ -44,10 +47,23 @@ public class Laser : MonoBehaviour
     private float timer = 0.0f;
     private bool towardsValueA;
 
+
+    //Reflect
+    List<Vector3> Points;
+    int maxReflections = 10;
+    List<float> reflectionLength;
+
+
+
     // Start is called before the first frame update
     void Start()
     {
-        lineRenderer.SetPosition(1, new Vector3(laser, 0, 0));
+        reflectionLength = Enumerable.Repeat(0.01f, maxReflections + 1).ToList();
+        Points = new List<Vector3>();
+
+        lineRenderer.positionCount = 2;
+        lineRenderer.SetPosition(0, laserStartPoint.position);
+        lineRenderer.SetPosition(1, laserStartPoint.position);
 
         if (laserMode == LaserMode.Moving)
         {
@@ -59,18 +75,204 @@ public class Laser : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        laserZRotation = transform.eulerAngles.z;
-        rayDirection = new Vector2(Mathf.Cos(laserZRotation * Mathf.Deg2Rad), Mathf.Sin(laserZRotation * Mathf.Deg2Rad));
-        FindCollision();
+        Vector3 rayDirection = laserStartPoint.right.normalized;
+        FindCollision(rayDirection);
 
         if (laserMode == LaserMode.Rotate)
         {
             RotateZBackAndForth();
         }
+
+        lineRenderer.positionCount = Points.Count;
+        lineRenderer.SetPositions(Points.ToArray());
     }
 
+    private void FindCollision(Vector3 rayDirection)
+    {
+        if (currentMaxLineLength < maxLineLength)
+        {
+            currentMaxLineLength += laserIncrease * Time.deltaTime;
+            currentMaxLineLength = Mathf.Min(currentMaxLineLength, maxLineLength);
+        }
+
+        Points.Clear();
+        Points.Add(laserStartPoint.position);
+
+        int reflections = 1;
+        Vector3 origin = laserStartPoint.position;
+
+        while (reflections < maxReflections)
+        {
+            RaycastHit2D hit = Physics2D.Raycast(origin, rayDirection, currentMaxLineLength);
+
+            if (hit)
+            {
+                Points.Add(hit.point);
+
+                if (hit.collider.CompareTag("Mirror"))
+                {
+                    rayDirection = Vector3.Reflect(rayDirection, hit.normal);
+                    origin = (Vector3)hit.point + (rayDirection.normalized * 0.01f); // Small offset to avoid self-collision
+
+                    // Reflect further from the mirror
+                    ReflectFurther(origin, rayDirection, reflections, hit.point);
+
+                    // After reflection, smoothly increase currentMaxLineLength towards maxLineLength
+                    float distance = Vector3.Distance(laserStartPoint.position, hit.point);
+                    currentMaxLineLength = distance;
+
+                    return; // Exit loop after reflection
+                }
+                else
+                {
+                    FindLaserLedBlock(hit);
+
+                    float distance = Vector3.Distance(laserStartPoint.position, hit.point);
+
+                    if (currentMaxLineLength < distance)
+                    {
+                        // Smoothly increase currentMaxLineLength towards the distance
+                        currentMaxLineLength = Mathf.MoveTowards(currentMaxLineLength, distance, Time.deltaTime * laserIncrease);
+                    }
+                    else
+                    {
+                        // Set currentMaxLineLength to the distance
+                        currentMaxLineLength = distance;
+                    }
+
+                    // Reset the reflected length to the original value (0.01f) when not colliding with a mirror
+                    ResetReflectionLength();
+                    Points.Add(origin + rayDirection * currentMaxLineLength);
+                    break;
+                }
+            }
+            else
+            {
+                // Reset the reflected length to the original value (0.01f) when no hit detected
+                ResetReflectionLength();
+                Points.Add(origin + rayDirection * currentMaxLineLength);
+                break; // Exit loop if no hit detected
+            }
+        }
+    }
+
+    private void ReflectFurther(Vector3 origin, Vector3 newDirection, int reflections, Vector3 hitPoint)
+    {
+        if (reflections >= maxReflections || reflections >= reflectionLength.Count)
+            return;
+
+        if (reflectionLength[reflections] < maxLineLength)
+        {
+            reflectionLength[reflections] += laserIncrease * Time.deltaTime;
+            reflectionLength[reflections] = Mathf.Min(reflectionLength[reflections], maxLineLength);
+        }
+
+        RaycastHit2D hit = Physics2D.Raycast(origin, newDirection, reflectionLength[reflections]);
+
+        if (hit)
+        {
+            FindLaserLedBlock(hit);
+
+            if (hit.collider.CompareTag("Mirror"))
+            {
+                newDirection = Vector3.Reflect(newDirection, hit.normal);
+                var neworigin = (Vector3)hit.point + (newDirection.normalized * 0.01f); // Small offset to avoid self-collision
+
+                Points.Add(hit.point); // Add hit point before reflecting
+
+                ReflectFurther(neworigin, newDirection, reflections + 1, hit.point); // Recursive reflection
+                reflectionLength[reflections] = hit.distance;
+            }
+            else
+            {
+                Points.Add(hit.point); // Add hit point
+                return; // Exit the recursion after adding one point
+            }
+        }
+        else
+        {
+            Points.Add(hitPoint + newDirection * reflectionLength[reflections]); // Use the given reflection's length
+
+            // Clear or set the remaining reflections beyond the current one to 0.01f
+            for (int i = reflections + 1; i < reflectionLength.Count; i++)
+            {
+                reflectionLength[i] = 0.01f;
+            }
+        }
+    }
+
+    //private void ReflectFurther(Vector3 origin, Vector3 newDirection, int reflections, Vector3 hitPoint)
+    //{
+    //    if (reflections >= maxReflections || reflections >= reflectionLength.Count)
+    //        return;
+
+    //    RaycastHit2D hit = Physics2D.Raycast(origin, newDirection, reflectionLength[reflections]);
+    //    Debug.DrawRay(origin, newDirection * reflectionLength[reflections]);
+
+    //    if (hit)
+    //    {
+    //        FindLaserLedBlock(hit);
+
+    //        if (hit.collider.CompareTag("Mirror"))
+    //        {
+    //            newDirection = Vector3.Reflect(newDirection, hit.normal);
+    //            var neworigin = (Vector3)hit.point + (newDirection.normalized * 0.01f); // Small offset to avoid self-collision
+
+    //            Points.Add(hit.point); // Add hit point before reflecting
+
+    //            ReflectFurther(neworigin, newDirection, reflections + 1, hit.point); // Recursive reflection
+    //        }
+    //        else
+    //        {
+    //            Points.Add(hit.point); // Add hit point
+    //            return; // Exit the recursion after adding one point
+    //        }
+    //    }
+    //    else
+    //    {
+    //        // Gradually increase the length of the last reflection if it reached the maximum length
+    //        float lastLength = reflectionLength[reflections];
+    //        float newLength = Mathf.Min(lastLength + laserIncrease * Time.deltaTime, maxLineLength);
+    //        reflectionLength[reflections] = newLength;
+    //        //Debug.Log($"Reflection {reflections}: Last length: {lastLength}, New length: {newLength}, Max length: {maxLineLength}");
+
+    //        Points.Add(hitPoint + newDirection * reflectionLength[reflections]); // Use the given reflection's length
+
+    //        // Clear or set the remaining reflections beyond the current one to 0.01f
+    //        for (int i = reflections + 1; i < reflectionLength.Count; i++)
+    //        {
+    //            reflectionLength[i] = 0.01f;
+    //        }
+    //    }
+    //}
+
+    private void ResetReflectionLength()
+    {
+        for (int i = 0; i < reflectionLength.Count; i++)
+        {
+            reflectionLength[i] = 0.01f; // Reset each value to the initial length
+        }
+    }
+
+    private void FindLaserLedBlock(RaycastHit2D block)
+    {
+        if (block.collider.CompareTag("LaserBlockSides"))
+        {
+            Transform parentTransform = block.collider.transform.parent;
+            if (parentTransform != null)
+            {
+                LaserLedObject laserObject = parentTransform.GetComponent<LaserLedObject>();
+                if (laserObject != null)
+                {
+                    laserObject.TransformLaser();
+                }
+            }
+        }
+    }
+
+    //Rotate
     private void RotateZBackAndForth()
     {
         timer += Time.deltaTime;
@@ -90,39 +292,6 @@ public class Laser : MonoBehaviour
         }
 
         transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, laserZRotation);
-    }
-    private void FindCollision()
-    {
-        RaycastHit2D hit = Physics2D.Raycast(laserStartPoint.position, rayDirection * maxLineLength);
-        
-        if (hit)
-        {
-            lineRenderer.SetPosition(1, new Vector3(hit.distance, 0, 0));
-            laser = hit.distance;
-
-            if (hit.collider.CompareTag("LaserBlockSides"))
-            {
-                Transform parentTransform = hit.collider.transform.parent;
-
-                if (parentTransform != null)
-                {
-                    LaserLedObject laserObject = parentTransform.GetComponent<LaserLedObject>();
-
-                    if (laserObject != null)
-                    {
-                        laserObject.TransformLaser();
-                    }
-                }
-            }
-        }
-        else
-        {
-            if (laser < maxLineLength)
-            {
-                laser += laserIncrease * Time.deltaTime;
-                lineRenderer.SetPosition(1, new Vector3(laser, 0, 0));
-            }
-        }
     }
 
     //Move
@@ -157,7 +326,7 @@ public class Laser : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         //RotateGizmos
-        if(laserMode == LaserMode.Rotate)
+        if (laserMode == LaserMode.Rotate)
         {
             Vector3 pointOnePosition = transform.position + Quaternion.Euler(0, 0, angleA) * Vector3.right;
             Vector3 pointTwoPosition = transform.position + Quaternion.Euler(0, 0, angleB) * Vector3.right;
