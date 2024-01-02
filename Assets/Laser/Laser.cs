@@ -41,8 +41,6 @@ public class Laser : MonoBehaviour
     private bool towardsPointA;
     private Vector2 localPointA;
     private Vector2 localPointB;
-    private Vector2 rayDirection;
-    private float laser = 0.01f;
     private float laserZRotation;
     private float timer = 0.0f;
     private bool towardsValueA;
@@ -109,6 +107,7 @@ public class Laser : MonoBehaviour
 
             if (hit)
             {
+                FindLaserLedBlock(hit);
                 Points.Add(hit.point);
 
                 if (hit.collider.CompareTag("Mirror"))
@@ -127,8 +126,6 @@ public class Laser : MonoBehaviour
                 }
                 else
                 {
-                    FindLaserLedBlock(hit);
-
                     float distance = Vector3.Distance(laserStartPoint.position, hit.point);
 
                     if (currentMaxLineLength < distance)
@@ -187,6 +184,7 @@ public class Laser : MonoBehaviour
             }
             else
             {
+                reflectionLength[reflections] = hit.distance;
                 Points.Add(hit.point); // Add hit point
                 return; // Exit the recursion after adding one point
             }
@@ -202,51 +200,6 @@ public class Laser : MonoBehaviour
             }
         }
     }
-
-    //private void ReflectFurther(Vector3 origin, Vector3 newDirection, int reflections, Vector3 hitPoint)
-    //{
-    //    if (reflections >= maxReflections || reflections >= reflectionLength.Count)
-    //        return;
-
-    //    RaycastHit2D hit = Physics2D.Raycast(origin, newDirection, reflectionLength[reflections]);
-    //    Debug.DrawRay(origin, newDirection * reflectionLength[reflections]);
-
-    //    if (hit)
-    //    {
-    //        FindLaserLedBlock(hit);
-
-    //        if (hit.collider.CompareTag("Mirror"))
-    //        {
-    //            newDirection = Vector3.Reflect(newDirection, hit.normal);
-    //            var neworigin = (Vector3)hit.point + (newDirection.normalized * 0.01f); // Small offset to avoid self-collision
-
-    //            Points.Add(hit.point); // Add hit point before reflecting
-
-    //            ReflectFurther(neworigin, newDirection, reflections + 1, hit.point); // Recursive reflection
-    //        }
-    //        else
-    //        {
-    //            Points.Add(hit.point); // Add hit point
-    //            return; // Exit the recursion after adding one point
-    //        }
-    //    }
-    //    else
-    //    {
-    //        // Gradually increase the length of the last reflection if it reached the maximum length
-    //        float lastLength = reflectionLength[reflections];
-    //        float newLength = Mathf.Min(lastLength + laserIncrease * Time.deltaTime, maxLineLength);
-    //        reflectionLength[reflections] = newLength;
-    //        //Debug.Log($"Reflection {reflections}: Last length: {lastLength}, New length: {newLength}, Max length: {maxLineLength}");
-
-    //        Points.Add(hitPoint + newDirection * reflectionLength[reflections]); // Use the given reflection's length
-
-    //        // Clear or set the remaining reflections beyond the current one to 0.01f
-    //        for (int i = reflections + 1; i < reflectionLength.Count; i++)
-    //        {
-    //            reflectionLength[i] = 0.01f;
-    //        }
-    //    }
-    //}
 
     private void ResetReflectionLength()
     {

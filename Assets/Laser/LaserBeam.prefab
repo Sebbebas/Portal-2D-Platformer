@@ -94,7 +94,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5395169755196349233}
   - component: {fileID: 761583139093216644}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Line
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -354,7 +354,9 @@ MonoBehaviour:
   lineRenderer: {fileID: 761583139093216644}
   laserStartPoint: {fileID: 1569659979211118684}
   maxLineLength: 50
-  laserIncrease: 20
+  laserIncrease: 100
+  startVFX: {fileID: 0}
+  endVFX: {fileID: 0}
   laserMode: 0
   switchTime: 4
   angleA: -90
