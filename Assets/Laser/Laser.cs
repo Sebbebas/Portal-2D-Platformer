@@ -45,15 +45,14 @@ public class Laser : MonoBehaviour
     private float timer = 0.0f;
     private bool towardsValueA;
 
-
     //Reflect
     List<Vector3> Points;
     int maxReflections = 10;
     List<float> reflectionLength;
 
+    bool moveLaser = false;
+    public Vector2 mousePos; //This variable is manipulated in InteractionController
 
-
-    // Start is called before the first frame update
     void Start()
     {
         reflectionLength = Enumerable.Repeat(0.01f, maxReflections + 1).ToList();
@@ -72,6 +71,11 @@ public class Laser : MonoBehaviour
         }
     }
 
+    public void ManuallyMoveLaser()
+    {
+        moveLaser = !moveLaser;
+    }
+
     // Update is called once per frame
     void FixedUpdate()
     {
@@ -83,8 +87,35 @@ public class Laser : MonoBehaviour
             RotateZBackAndForth();
         }
 
+        if (laserMode == LaserMode.MovedByInteracion)
+        {
+            if (moveLaser)
+            {
+                Debug.Log(mousePos);
+                Rotate();
+            }
+        }
+
         lineRenderer.positionCount = Points.Count;
         lineRenderer.SetPositions(Points.ToArray());
+    }
+
+    void Rotate()
+    {
+        if (mousePos != Vector2.zero)
+        {
+            // Calculate the angle in radians
+            float angleRadians = Mathf.Atan2(mousePos.y, mousePos.x);
+
+            // Convert the angle to degrees
+            float angleDegrees = angleRadians * Mathf.Rad2Deg;
+
+            // Create a Quaternion rotation around the Z-axis based on the angle
+            Quaternion targetRotation = Quaternion.Euler(0f, 0f, angleDegrees);
+
+            // Apply the rotation to the transform
+            transform.rotation = targetRotation;
+        }
     }
 
     private void FindCollision(Vector3 rayDirection)
@@ -119,24 +150,21 @@ public class Laser : MonoBehaviour
                     ReflectFurther(origin, rayDirection, reflections, hit.point);
 
                     // After reflection, smoothly increase currentMaxLineLength towards maxLineLength
-                    float distance = Vector3.Distance(laserStartPoint.position, hit.point);
-                    currentMaxLineLength = distance;
+                    currentMaxLineLength = hit.distance;
 
                     return; // Exit loop after reflection
                 }
                 else
                 {
-                    float distance = Vector3.Distance(laserStartPoint.position, hit.point);
-
-                    if (currentMaxLineLength < distance)
+                    if (currentMaxLineLength < hit.distance)
                     {
                         // Smoothly increase currentMaxLineLength towards the distance
-                        currentMaxLineLength = Mathf.MoveTowards(currentMaxLineLength, distance, Time.deltaTime * laserIncrease);
+                        currentMaxLineLength = Mathf.MoveTowards(currentMaxLineLength, hit.distance, Time.deltaTime * laserIncrease);
                     }
                     else
                     {
                         // Set currentMaxLineLength to the distance
-                        currentMaxLineLength = distance;
+                        currentMaxLineLength = hit.distance;
                     }
 
                     // Reset the reflected length to the original value (0.01f) when not colliding with a mirror
@@ -275,6 +303,7 @@ public class Laser : MonoBehaviour
             yield return new WaitForSeconds(timeToPauseOnPoint);
         }
     }
+
 
     private void OnDrawGizmosSelected()
     {

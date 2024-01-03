@@ -481,7 +481,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 912686953
-  m_SortingLayer: 1
+  m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 158418023, guid: d8985b103a3f4124a9215e6e1af03277, type: 3}
   m_Color: {r: 0.4716527, g: 0, b: 0.69411767, a: 1}
@@ -622,6 +622,7 @@ GameObject:
   - component: {fileID: 1900129800963196871}
   - component: {fileID: 6244882335894722145}
   - component: {fileID: 7337769674572338667}
+  - component: {fileID: 3609682956257347366}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -689,7 +690,19 @@ MonoBehaviour:
     m_ActionId: 91b73326-f039-4d94-ac3b-aa5e9c59947f
     m_ActionName: Player/Move[/Keyboard/w,/Keyboard/upArrow,/Keyboard/s,/Keyboard/downArrow,/Keyboard/a,/Keyboard/leftArrow,/Keyboard/d,/Keyboard/rightArrow]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3609682956257347366}
+        m_TargetAssemblyTypeName: InteractionController, Assembly-CSharp
+        m_MethodName: OnLook
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: e5afe65a-dc3e-4687-b5eb-079f7f305248
     m_ActionName: Player/Look[/Mouse/delta]
   - m_PersistentCalls:
@@ -768,6 +781,38 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 42ffe4dc-e355-4074-906d-8647e8eabb3f
     m_ActionName: UI/TrackedDeviceOrientation
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3609682956257347366}
+        m_TargetAssemblyTypeName: InteractionController, Assembly-CSharp
+        m_MethodName: OnInteractInput
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 3609682956257347366}
+        m_TargetAssemblyTypeName: InteractionController, Assembly-CSharp
+        m_MethodName: OnLaserMove
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 862928a5-1287-4d55-8f79-10f637214f2f
+    m_ActionName: Player/Interact[/Keyboard/k]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: b32643e7-3d45-4789-9a4c-a225c19ac40e
+    m_ActionName: Player/MousePos[/Mouse/position]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -884,38 +929,52 @@ MonoBehaviour:
   coyoteTime: 0.1
   dashCheckLayers:
     serializedVersion: 2
-    m_Bits: 2048
+    m_Bits: 0
   dashForce: 16
   dashDuration: 0.25
   dashCooldown: 1
   dashGravity: 0
   groundCheckLayers:
     serializedVersion: 2
-    m_Bits: 30784
+    m_Bits: 1
   groundCheckOffset: {x: 0, y: 0.5}
   groundCheckRadius: 0.45
   wallCheckLayer:
     serializedVersion: 2
-    m_Bits: 16384
+    m_Bits: 0
   wallCheckOffset: {x: 0, y: 0}
   wallCheckRadius: 0.8
   slipperyCheckLayers:
     serializedVersion: 2
-    m_Bits: 4096
+    m_Bits: 0
   movementOnIce: 14
   accelerationOnIce: 1
   zoomCheckLayers:
     serializedVersion: 2
-    m_Bits: 8192
+    m_Bits: 0
   bounceCheckLayers:
     serializedVersion: 2
-    m_Bits: 32768
+    m_Bits: 0
   bounceGravity: 2
   lowerGroundCheckOffset: {x: 0, y: 1.4}
   lowerGroundCheckRadius: 0.45
   myRigidbody: {fileID: 1900129800963196871}
   frictionPhysics: {fileID: 6200000, guid: c641f5bd4d95da84f817df1117e01c14, type: 2}
   playerPhysics: {fileID: 6200000, guid: 9f853d4f9f692c54b8b83465cb3995e0, type: 2}
+--- !u!114 &3609682956257347366
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4852439808313440534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff4e89b3e4c80654699fe3109144c03e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  interactorSource: {fileID: 6238524069571189555}
+  interactRange: 3
 --- !u!1 &5338335277965498885
 GameObject:
   m_ObjectHideFlags: 0
@@ -1581,7 +1640,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 912686953
-  m_SortingLayer: 1
+  m_SortingLayer: 0
   m_SortingOrder: 1
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 0, g: 0, b: 0, a: 1}

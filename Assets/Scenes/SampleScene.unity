@@ -4746,30 +4746,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7337769674572338667, guid: 65f86b4f6430cda4dbaeef42e8074902, type: 3}
-      propertyPath: wallCheckLayer.m_Bits
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7337769674572338667, guid: 65f86b4f6430cda4dbaeef42e8074902, type: 3}
-      propertyPath: dashCheckLayers.m_Bits
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7337769674572338667, guid: 65f86b4f6430cda4dbaeef42e8074902, type: 3}
-      propertyPath: zoomCheckLayers.m_Bits
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7337769674572338667, guid: 65f86b4f6430cda4dbaeef42e8074902, type: 3}
-      propertyPath: bounceCheckLayers.m_Bits
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7337769674572338667, guid: 65f86b4f6430cda4dbaeef42e8074902, type: 3}
-      propertyPath: groundCheckLayers.m_Bits
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7337769674572338667, guid: 65f86b4f6430cda4dbaeef42e8074902, type: 3}
-      propertyPath: slipperyCheckLayers.m_Bits
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
